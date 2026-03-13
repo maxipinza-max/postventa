@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eleva · División Postventa</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%);
+      color: white;
+      padding: 40px 48px;
+      text-align: center;
+    }
+    .header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+    .header p  { color: #93c5fd; font-size: 0.9rem; margin-top: 8px; }
+
+    .cards {
+      display: flex; gap: 24px; justify-content: center;
+      padding: 48px; flex-wrap: wrap; flex: 1;
+    }
+    .card {
+      background: white; border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 36px 32px; width: 320px;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 14px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-top: 5px solid #1d4ed8;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(0,0,0,0.14); }
+    .card-icon { font-size: 2.8rem; }
+    .card-title { font-size: 1.15rem; font-weight: 800; color: #1e293b; }
+    .card-desc  { font-size: 0.85rem; color: #64748b; line-height: 1.6; }
+    .card-link  {
+      margin-top: auto; display: inline-flex; align-items: center; gap: 6px;
+      color: #2563eb; font-size: 0.82rem; font-weight: 700;
+    }
+    .card:nth-child(2) { border-top-color: #7c3aed; }
+
+    .footer { text-align: center; padding: 20px; font-size: 0.75rem; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 Proyectos Eleva · División Postventa</h1>
+  <p>Grupo Kaufmann · División Tecnológica · Actualizado 13 mar 2026</p>
+</div>
+
+<div class="cards">
+  <a class="card" href="dashboard.html">
+    <div class="card-icon">🗂️</div>
+    <div class="card-title">Dashboard de Proyectos</div>
+    <div class="card-desc">Vista completa de todas las épicas del proyecto ELV con estado, fecha de entrega y responsable. Filtros por estado de planificación.</div>
+    <div class="card-link">Ver dashboard →</div>
+  </a>
+
+  <a class="card" href="roadmap.html">
+    <div class="card-icon">🗺️</div>
+    <div class="card-title">Roadmap Postventa</div>
+    <div class="card-desc">Visualización Gantt de los proyectos con label Postventa ordenados por fecha de entrega. Timeline Ene–Jul 2026.</div>
+    <div class="card-link">Ver roadmap →</div>
+  </a>
+</div>
+
+<div class="footer">Fuente: Jira · elevaap.atlassian.net · Proyecto ELV · Label: Postventa</div>
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard de Proyectos Eleva</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+    }
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      color: white;
+      padding: 28px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .header-left h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.5px; }
+    .header-left p { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
+    .header-right { text-align: right; font-size: 0.82rem; color: #94a3b8; }
+    .header-right span { display: block; color: #e2e8f0; font-weight: 600; font-size: 0.9rem; }
+
+    /* KPI CARDS */
+    .kpi-bar {
+      display: flex; gap: 16px; padding: 24px 40px;
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+    .kpi-card {
+      flex: 1; min-width: 130px;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px 20px;
+      border-left: 4px solid #ccc;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .kpi-card.en-curso { border-left-color: #3b82f6; }
+    .kpi-card.por-hacer { border-left-color: #f59e0b; }
+    .kpi-card.backlog { border-left-color: #8b5cf6; }
+    .kpi-card.finalizado { border-left-color: #10b981; }
+    .kpi-card.deprecado { border-left-color: #6b7280; }
+    .kpi-num { font-size: 2rem; font-weight: 800; line-height: 1; }
+    .kpi-card.en-curso .kpi-num { color: #3b82f6; }
+    .kpi-card.por-hacer .kpi-num { color: #f59e0b; }
+    .kpi-card.backlog .kpi-num { color: #8b5cf6; }
+    .kpi-card.finalizado .kpi-num { color: #10b981; }
+    .kpi-card.deprecado .kpi-num { color: #6b7280; }
+    .kpi-label { font-size: 0.75rem; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* FILTERS */
+    .filters {
+      padding: 16px 40px;
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .filter-label { font-size: 0.8rem; color: #64748b; font-weight: 600; }
+    .filter-btn {
+      padding: 6px 14px; border-radius: 20px; border: 1.5px solid #e2e8f0;
+      background: white; cursor: pointer; font-size: 0.78rem; font-weight: 600;
+      color: #475569; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+      padding: 10px 40px 40px;
+    }
+
+    /* PROJECT CARD */
+    .card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+    .card-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+    }
+    .card-key { font-size: 0.72rem; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
+    .card-title { font-size: 0.95rem; font-weight: 700; color: #1e293b; line-height: 1.35; flex: 1; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+      text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .status-badge::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
+    .badge-en-curso { background: #dbeafe; color: #1d4ed8; }
+    .badge-en-curso::before { background: #3b82f6; }
+    .badge-por-hacer { background: #fef3c7; color: #92400e; }
+    .badge-por-hacer::before { background: #f59e0b; }
+    .badge-backlog { background: #ede9fe; color: #5b21b6; }
+    .badge-backlog::before { background: #8b5cf6; }
+    .badge-finalizado { background: #d1fae5; color: #065f46; }
+    .badge-finalizado::before { background: #10b981; }
+    .badge-deprecado { background: #f1f5f9; color: #64748b; }
+    .badge-deprecado::before { background: #94a3b8; }
+
+    .card-body { padding: 14px 20px; flex: 1; }
+    .card-desc {
+      font-size: 0.82rem; color: #475569; line-height: 1.55;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    .card-footer {
+      padding: 12px 20px;
+      background: #f8fafc;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid #f1f5f9;
+      flex-wrap: wrap; gap: 8px;
+    }
+    .meta-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #64748b; }
+    .meta-icon { font-size: 0.9rem; }
+    .meta-item strong { color: #334155; font-weight: 600; }
+
+    .due-overdue { color: #dc2626 !important; }
+    .due-overdue strong { color: #dc2626 !important; }
+    .due-soon { color: #d97706 !important; }
+    .due-soon strong { color: #d97706 !important; }
+    .due-ok { color: #059669 !important; }
+    .due-ok strong { color: #059669 !important; }
+
+    /* Section title */
+    .section-title {
+      padding: 20px 40px 0;
+      font-size: 0.8rem; font-weight: 700; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    .no-results { padding: 40px; text-align: center; color: #94a3b8; font-size: 0.9rem; }
+
+    /* Legend */
+    .legend { padding: 0 40px 10px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #64748b; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+
+    @media (max-width: 600px) {
+      .header, .kpi-bar, .grid, .filters, .section-title, .legend { padding-left: 16px; padding-right: 16px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>📊 Proyectos Eleva</h1>
+    <p>Estado de avance · División Postventa · Grupo Kaufmann</p>
+  </div>
+  <div class="header-right">
+    Actualizado<span id="fecha-actual"></span>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-bar" id="kpi-bar">
+  <!-- filled by JS -->
+</div>
+
+<!-- Filters -->
+<div class="filters">
+  <span class="filter-label">Filtrar por:</span>
+  <button class="filter-btn active" onclick="filterStatus('all', this)">Todos</button>
+  <button class="filter-btn" onclick="filterStatus('En curso', this)">🔵 En curso</button>
+  <button class="filter-btn" onclick="filterStatus('Tareas por hacer', this)">🟡 Por hacer</button>
+  <button class="filter-btn" onclick="filterStatus('Backlog', this)">🟣 Backlog</button>
+  <button class="filter-btn" onclick="filterStatus('Finalizada', this)">🟢 Finalizado</button>
+  <button class="filter-btn" onclick="filterStatus('Deprecado', this)">⚫ Deprecado</button>
+</div>
+
+<div class="section-title" id="section-label">Todos los proyectos</div>
+<div class="grid" id="grid"></div>
+
+<script>
+const today = new Date();
+document.getElementById('fecha-actual').textContent = today.toLocaleDateString('es-CL', {day:'2-digit',month:'long',year:'numeric'});
+
+const projects = [
+  {
+    key: "ELV-3456",
+    name: "Métricas de usabilidad Eleva",
+    desc: "Implementar métricas de usabilidad dentro de la plataforma Eleva para medir la experiencia y comportamiento de los usuarios en el sistema.",
+    due: null,
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3455",
+    name: "Resumen de productos en Venta Digital",
+    desc: "Incorporar un resumen consolidado de los productos disponibles en el módulo de Venta Digital, facilitando la visión global al asesor durante el proceso de venta.",
+    due: null,
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3454",
+    name: "Información de Garantía General y Garantía Extendida Cliente",
+    desc: "Mostrar al asesor la información de garantía general y garantía extendida del vehículo del cliente directamente en la plataforma Eleva.",
+    due: null,
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3428",
+    name: "Visualización de Última Fecha de Ingreso a Taller en Venta Digital",
+    desc: "Incorporar en el panel de venta digital de Eleva, mediante integración con API 360, la última fecha en que el vehículo ingresó a taller. Permite al asesor contextualizar la propuesta de servicios.",
+    due: null,
+    status: "Tareas por hacer",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-3387",
+    name: "Dimo en plataforma Eleva",
+    desc: "Habilitar la venta, cotización y facturación de productos Dimo dentro de la plataforma Eleva. Implementación del flujo comercial completo para este segmento.",
+    due: "2026-04-30",
+    status: "Tareas por hacer",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-3321",
+    name: "KPI paso vehicular",
+    desc: "Como gerente de sucursal, necesito que los vendedores y asesores coticen a todos los clientes que ingresan a la sucursal. Requiere visualización de KPIs de paso vehicular.",
+    due: null,
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3319",
+    name: "Semáforo de productos",
+    desc: "Como asesor de servicio, visualizar qué productos y servicios NO están contratados por cada vehículo de la cartera de clientes, para priorizar acciones comerciales.",
+    due: null,
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3300",
+    name: "Filtros Venta Digital",
+    desc: "Incorporar filtros avanzados en el módulo de Venta Digital de Eleva, permitiendo segmentar y buscar oportunidades de venta de forma más eficiente.",
+    due: "2025-12-31",
+    status: "En curso",
+    assignee: "Maximiliano Ipinza Ortega"
+  },
+  {
+    key: "ELV-3281",
+    name: "Portal Camiones",
+    desc: "Desarrollo del portal específico para el segmento de camiones dentro de la plataforma Eleva, adaptando los flujos de venta y postventa a las necesidades de este segmento.",
+    due: "2026-04-30",
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3156",
+    name: "Incrementales Agenda",
+    desc: "Mejoras incrementales al módulo de Agenda: anulación de reservas, registro de código de reserva en la card, creación de perfil asesor de callcenter y gestión de campañas.",
+    due: "2026-02-14",
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3150",
+    name: "Garantía Extendida en Venta Digital",
+    desc: "Llevar el módulo de Garantía Extendida al flujo de Venta Digital de Eleva, integrando cotización y venta de GE dentro del proceso comercial digital.",
+    due: null,
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3148",
+    name: "Klicker: Cotización Automática",
+    desc: "La Gerencia de Negocios Conectados requiere incorporar una cotización automática para el área Klicker dentro de Eleva, automatizando el proceso de oferta al cliente.",
+    due: "2026-03-31",
+    status: "Tareas por hacer",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-3124",
+    name: "Portal Smart Postventa — Indicadores por Sucursal",
+    desc: "Como Gerente de Postventa, visualizar en el Portal Smart los indicadores clave de sucursales y vendedores: NPS, metas, permanencia y otros KPIs de gestión.",
+    due: "2026-05-31",
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3122",
+    name: "Home Eleva",
+    desc: "Crear un nuevo Home para la plataforma Eleva con dashboards personalizados por perfil de asesor, centralizando métricas clave y accesos rápidos a los módulos principales.",
+    due: "2026-05-31",
+    status: "Tareas por hacer",
+    assignee: "Victor Asencio"
+  },
+  {
+    key: "ELV-3072",
+    name: "Incrementales Asistencia en Ruta",
+    desc: "Mejoras incrementales al módulo de Asistencia en Ruta. Incluye ajustes por marca (ej. excluir Smart), correcciones de flujo y adaptaciones según requerimientos operativos.",
+    due: null,
+    status: "Tareas por hacer",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3033",
+    name: "Perfil de cliente",
+    desc: "Integración de API Cliente 360 en Eleva. La fuerza de ventas actualmente no tiene una vista unificada del cliente; este módulo consolida historial, contratos y datos del cliente en un solo perfil.",
+    due: "2026-03-20",
+    status: "Backlog",
+    assignee: "Fernando Chazarreta"
+  },
+  {
+    key: "ELV-2995",
+    name: "Módulo de Certificados AndesMaq en Eleva",
+    desc: "Permitir a usuarios autorizados emitir, consultar, descargar y enviar certificados oficiales de AndesMaq directamente desde la plataforma Eleva.",
+    due: "2026-01-31",
+    status: "En curso",
+    assignee: "Victor Asencio"
+  },
+  {
+    key: "ELV-2965",
+    name: "Pautas de Mantenimiento Perú",
+    desc: "Visualización de las pautas de mantenimiento para la operación de Perú dentro de la plataforma Eleva, adaptando el módulo al contexto de ese mercado.",
+    due: null,
+    status: "Backlog",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-2913",
+    name: "Refactor: Mis Ventas Eleva",
+    desc: "Rediseño del módulo 'Mis Ventas': creación de solapas para Ventas Digitales y Ventas Manuales, botón de exportación a Excel e incorporación de nuevas métricas.",
+    due: null,
+    status: "Backlog",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-2912",
+    name: "Refactor: Mis Cotizaciones Eleva",
+    desc: "Rediseño del módulo 'Mis Cotizaciones' para incluir todos los productos cotizables en Eleva. Al seleccionar una cotización, despliega pantalla con información detallada.",
+    due: null,
+    status: "Backlog",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-2908",
+    name: "Aprobación Venta Manual 2.0",
+    desc: "Mejora del flujo de aprobación de ventas manuales, incorporando nuevas validaciones y optimizando el proceso de revisión y autorización por niveles jerárquicos.",
+    due: "2026-01-31",
+    status: "Finalizada",
+    assignee: "Victor Asencio"
+  },
+  {
+    key: "ELV-2907",
+    name: "Cotización Multiproducto y Multipaís Eleva",
+    desc: "Permitir la cotización de múltiples productos en una sola operación y extender la funcionalidad a diferentes países donde opera Grupo Kaufmann.",
+    due: null,
+    status: "Finalizada",
+    assignee: "Andrea"
+  },
+  {
+    key: "ELV-3245",
+    name: "[Hotfix] Client and idProduct",
+    desc: "Corrección de emergencia relacionada con la identificación de clientes y productos en la plataforma. Fix aplicado en producción.",
+    due: null,
+    status: "Finalizada",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-3297",
+    name: "[Back] Fix new manual sale",
+    desc: "Corrección en el backend del flujo de nueva venta manual. Tarea deprecada por cambio de enfoque en el módulo.",
+    due: null,
+    status: "Deprecado",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-2986",
+    name: "Carga Masiva Venta Manual KSA",
+    desc: "Funcionalidad de carga masiva para ventas manuales en la operación KSA. Deprecada por cambio en los requisitos del negocio.",
+    due: null,
+    status: "Deprecado",
+    assignee: "Mauricio Etchevest"
+  },
+  {
+    key: "ELV-2759",
+    name: "Eleva: Selling Speech 2.0",
+    desc: "Como asesor de servicio, acceder a la data de OT históricas y abiertas de un vehículo para tener más información contextual y mejorar el discurso de venta.",
+    due: "2026-04-30",
+    status: "Tareas por hacer",
+    assignee: "Andrea"
+  }
+];
+
+function statusBadgeClass(status) {
+  const map = {
+    "En curso": "badge-en-curso",
+    "Tareas por hacer": "badge-por-hacer",
+    "Backlog": "badge-backlog",
+    "Finalizada": "badge-finalizado",
+    "Deprecado": "badge-deprecado"
+  };
+  return map[status] || "badge-backlog";
+}
+
+function formatDate(d) {
+  if (!d) return null;
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('es-CL', {day:'2-digit', month:'short', year:'numeric'});
+}
+
+function dueDateClass(d) {
+  if (!d) return '';
+  const dt = new Date(d + 'T00:00:00');
+  const diff = (dt - today) / (1000 * 60 * 60 * 24);
+  if (diff < 0) return 'due-overdue';
+  if (diff <= 30) return 'due-soon';
+  return 'due-ok';
+}
+
+function renderKPIs(data) {
+  const counts = {};
+  data.forEach(p => { counts[p.status] = (counts[p.status] || 0) + 1; });
+  const kpiDefs = [
+    {key:"En curso", label:"En curso", cls:"en-curso"},
+    {key:"Tareas por hacer", label:"Por hacer", cls:"por-hacer"},
+    {key:"Backlog", label:"Backlog", cls:"backlog"},
+    {key:"Finalizada", label:"Finalizados", cls:"finalizado"},
+    {key:"Deprecado", label:"Deprecados", cls:"deprecado"},
+  ];
+  document.getElementById('kpi-bar').innerHTML = kpiDefs.map(k => `
+    <div class="kpi-card ${k.cls}">
+      <span class="kpi-num">${counts[k.key] || 0}</span>
+      <span class="kpi-label">${k.label}</span>
+    </div>
+  `).join('') + `
+    <div class="kpi-card" style="border-left-color:#0f3460">
+      <span class="kpi-num" style="color:#0f3460">${data.length}</span>
+      <span class="kpi-label">Total épicas</span>
+    </div>
+  `;
+}
+
+function renderCards(data) {
+  const grid = document.getElementById('grid');
+  if (!data.length) {
+    grid.innerHTML = '<div class="no-results">No hay proyectos que coincidan con el filtro seleccionado.</div>';
+    return;
+  }
+  grid.innerHTML = data.map(p => {
+    const dueStr = formatDate(p.due);
+    const dueClass = p.due ? dueDateClass(p.due) : '';
+    const dueSuffix = p.due && dueDateClass(p.due) === 'due-overdue' ? ' ⚠️' : '';
+    return `
+    <div class="card" data-status="${p.status}">
+      <div class="card-header">
+        <div>
+          <div class="card-key">${p.key}</div>
+          <div class="card-title">${p.name}</div>
+        </div>
+        <span class="status-badge ${statusBadgeClass(p.status)}">${p.status}</span>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">${p.desc}</p>
+      </div>
+      <div class="card-footer">
+        <div class="meta-item ${dueClass}">
+          <span class="meta-icon">📅</span>
+          <span>${dueStr ? '<strong>' + dueStr + '</strong>' + dueSuffix : '<span style="color:#cbd5e1">Sin fecha definida</span>'}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">👤</span>
+          <strong>${p.assignee}</strong>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let currentFilter = 'all';
+
+function filterStatus(status, btn) {
+  currentFilter = status;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = status === 'all' ? projects : projects.filter(p => p.status === status);
+  document.getElementById('section-label').textContent =
+    status === 'all' ? `Todos los proyectos (${projects.length})` : `${status} (${filtered.length})`;
+  renderCards(filtered);
+}
+
+// Initial render
+renderKPIs(projects);
+renderCards(projects);
+document.getElementById('section-label').textContent = `Todos los proyectos (${projects.length})`;
+</script>
+</body>
+</html>
