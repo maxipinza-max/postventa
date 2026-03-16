@@ -1,509 +1,360 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard de Proyectos Eleva</title>
+  <title>Dashboard Postventa — Eleva</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
       background: #f0f2f5;
-      color: #1a1a2e;
+      color: #1e293b;
     }
-    /* HEADER */
+
+    /* ─── HEADER ─── */
     .header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%);
       color: white;
-      padding: 28px 40px;
+      padding: 28px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; }
+    .header p  { color: #93c5fd; font-size: 0.85rem; margin-top: 4px; }
+    .header-meta { text-align: right; font-size: 0.8rem; color: #93c5fd; }
+    .header-meta strong { display: block; color: #fff; font-size: 1rem; }
+    .header-nav a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 0.82rem;
+      margin-left: 16px;
+      padding: 6px 14px;
+      border: 1px solid #3b82f6;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .header-nav a:hover { background: #1d4ed8; color: white; }
+
+    /* ─── KPI ROW ─── */
+    .kpi-row {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      background: white;
+      border-bottom: 2px solid #e2e8f0;
     }
-    .header-left h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.5px; }
-    .header-left p { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
-    .header-right { text-align: right; font-size: 0.82rem; color: #94a3b8; }
-    .header-right span { display: block; color: #e2e8f0; font-weight: 600; font-size: 0.9rem; }
+    .kpi {
+      flex: 1; padding: 16px 20px;
+      border-right: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .kpi:last-child { border-right: none; }
+    .kpi-icon { font-size: 1.5rem; }
+    .kpi-val { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+    .kpi-lbl { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 2px; }
+    .c-blue   { color: #2563eb; }
+    .c-amber  { color: #d97706; }
+    .c-red    { color: #dc2626; }
+    .c-violet { color: #7c3aed; }
+    .c-green  { color: #059669; }
+    .c-slate  { color: #94a3b8; }
 
-    /* KPI CARDS */
-    .kpi-bar {
-      display: flex; gap: 16px; padding: 24px 40px;
-      background: #fff;
-      border-bottom: 1px solid #e2e8f0;
-      flex-wrap: wrap;
-    }
-    .kpi-card {
-      flex: 1; min-width: 130px;
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 16px 20px;
-      border-left: 4px solid #ccc;
-      display: flex; flex-direction: column; gap: 4px;
-    }
-    .kpi-card.en-curso { border-left-color: #3b82f6; }
-    .kpi-card.por-hacer { border-left-color: #f59e0b; }
-    .kpi-card.backlog { border-left-color: #8b5cf6; }
-    .kpi-card.finalizado { border-left-color: #10b981; }
-    .kpi-card.deprecado { border-left-color: #6b7280; }
-    .kpi-num { font-size: 2rem; font-weight: 800; line-height: 1; }
-    .kpi-card.en-curso .kpi-num { color: #3b82f6; }
-    .kpi-card.por-hacer .kpi-num { color: #f59e0b; }
-    .kpi-card.backlog .kpi-num { color: #8b5cf6; }
-    .kpi-card.finalizado .kpi-num { color: #10b981; }
-    .kpi-card.deprecado .kpi-num { color: #6b7280; }
-    .kpi-label { font-size: 0.75rem; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    /* FILTERS */
+    /* ─── FILTERS ─── */
     .filters {
-      padding: 16px 40px;
-      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      background: white;
+      padding: 16px 48px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
-    .filter-label { font-size: 0.8rem; color: #64748b; font-weight: 600; }
+    .filters-label { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
     .filter-btn {
-      padding: 6px 14px; border-radius: 20px; border: 1.5px solid #e2e8f0;
-      background: white; cursor: pointer; font-size: 0.78rem; font-weight: 600;
-      color: #475569; transition: all 0.2s;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 1.5px solid #e2e8f0;
+      background: white;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-    .filter-btn:hover, .filter-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
+    .filter-btn:hover { border-color: #2563eb; color: #2563eb; }
+    .filter-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+    .search-input {
+      margin-left: auto;
+      padding: 7px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      width: 220px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus { border-color: #2563eb; }
 
-    /* GRID */
-    .grid {
+    /* ─── CARDS GRID ─── */
+    .grid-wrap { padding: 28px 48px; }
+    .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
-      padding: 10px 40px 40px;
     }
 
-    /* PROJECT CARD */
+    /* ─── CARD ─── */
     .card {
       background: white;
       border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px #f1f5f9;
+      transition: box-shadow 0.15s, transform 0.15s;
+      position: relative;
       overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
       display: flex; flex-direction: column;
     }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-
-    .card-header {
-      padding: 16px 20px 12px;
-      border-bottom: 1px solid #f1f5f9;
-      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+    .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(-2px); }
+    .card-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: 14px 14px 0 0;
     }
-    .card-key { font-size: 0.72rem; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
-    .card-title { font-size: 0.95rem; font-weight: 700; color: #1e293b; line-height: 1.35; flex: 1; }
-
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 20px;
-      font-size: 0.72rem; font-weight: 700; white-space: nowrap;
-      text-transform: uppercase; letter-spacing: 0.3px;
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; margin-top: 6px; }
+    .card-key {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #94a3b8;
+      font-family: monospace;
+      letter-spacing: 0.3px;
     }
-    .status-badge::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
-    .badge-en-curso { background: #dbeafe; color: #1d4ed8; }
-    .badge-en-curso::before { background: #3b82f6; }
-    .badge-por-hacer { background: #fef3c7; color: #92400e; }
-    .badge-por-hacer::before { background: #f59e0b; }
-    .badge-backlog { background: #ede9fe; color: #5b21b6; }
-    .badge-backlog::before { background: #8b5cf6; }
-    .badge-finalizado { background: #d1fae5; color: #065f46; }
-    .badge-finalizado::before { background: #10b981; }
-    .badge-deprecado { background: #f1f5f9; color: #64748b; }
-    .badge-deprecado::before { background: #94a3b8; }
-
-    .card-body { padding: 14px 20px; flex: 1; }
+    .card-badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
     .card-desc {
-      font-size: 0.82rem; color: #475569; line-height: 1.55;
-      display: -webkit-box; -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical; overflow: hidden;
+      font-size: 0.78rem;
+      color: #64748b;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 14px;
+      flex: 1;
     }
-
-    .card-footer {
-      padding: 12px 20px;
-      background: #f8fafc;
+    .card-meta {
       display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.72rem;
+      color: #94a3b8;
       border-top: 1px solid #f1f5f9;
-      flex-wrap: wrap; gap: 8px;
+      padding-top: 10px;
     }
-    .meta-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #64748b; }
-    .meta-icon { font-size: 0.9rem; }
-    .meta-item strong { color: #334155; font-weight: 600; }
+    .card-meta .due { font-weight: 700; color: #475569; }
+    .card-meta .due.overdue { color: #dc2626; }
+    .card-meta .due.soon { color: #d97706; }
 
-    .due-overdue { color: #dc2626 !important; }
-    .due-overdue strong { color: #dc2626 !important; }
-    .due-soon { color: #d97706 !important; }
-    .due-soon strong { color: #d97706 !important; }
-    .due-ok { color: #059669 !important; }
-    .due-ok strong { color: #059669 !important; }
+    /* STATUS COLORS */
+    .bg-en-curso     { background: #2563eb; }
+    .bg-tareas       { background: #d97706; }
+    .bg-backlog      { background: #7c3aed; }
+    .bg-validacion   { background: #059669; }
+    .bg-bloqueado    { background: #dc2626; }
+    .bg-refinamiento { background: #0891b2; }
+    .bg-default      { background: #64748b; }
 
-    /* Section title */
-    .section-title {
-      padding: 20px 40px 0;
-      font-size: 0.8rem; font-weight: 700; color: #94a3b8;
-      text-transform: uppercase; letter-spacing: 1px;
+    .accent-en-curso     { background: #2563eb; }
+    .accent-tareas       { background: #d97706; }
+    .accent-backlog      { background: #7c3aed; }
+    .accent-validacion   { background: #059669; }
+    .accent-bloqueado    { background: #dc2626; }
+    .accent-refinamiento { background: #0891b2; }
+    .accent-default      { background: #64748b; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      grid-column: 1 / -1;
     }
+    .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
 
-    .no-results { padding: 40px; text-align: center; color: #94a3b8; font-size: 0.9rem; }
-
-    /* Legend */
-    .legend { padding: 0 40px 10px; display: flex; gap: 16px; flex-wrap: wrap; }
-    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #64748b; }
-    .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
-
-    @media (max-width: 600px) {
-      .header, .kpi-bar, .grid, .filters, .section-title, .legend { padding-left: 16px; padding-right: 16px; }
-      .grid { grid-template-columns: 1fr; }
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.72rem;
+      color: #94a3b8;
     }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-left">
-    <h1>📊 Proyectos Eleva</h1>
-    <p>Estado de avance · División Postventa · Grupo Kaufmann</p>
+  <div>
+    <h1>📋 Dashboard Postventa — Eleva</h1>
+    <p>Épicas del proyecto ELV con label Postventa · Fuente: Jira</p>
   </div>
-  <div class="header-right">
-    Actualizado<span id="fecha-actual"></span>
+  <div style="display:flex;align-items:center;gap:24px;">
+    <nav class="header-nav">
+      <a href="index.html">🏠 Inicio</a>
+      <a href="roadmap.html">📅 Roadmap</a>
+    </nav>
+    <div class="header-meta">
+      <strong id="today-label"></strong>
+      Actualizado automáticamente
+    </div>
   </div>
 </div>
 
-<!-- KPIs -->
-<div class="kpi-bar" id="kpi-bar">
-  <!-- filled by JS -->
-</div>
+<div class="kpi-row" id="kpi-row"></div>
 
-<!-- Filters -->
 <div class="filters">
-  <span class="filter-label">Filtrar por:</span>
-  <button class="filter-btn active" onclick="filterStatus('all', this)">Todos</button>
-  <button class="filter-btn" onclick="filterStatus('En curso', this)">🔵 En curso</button>
-  <button class="filter-btn" onclick="filterStatus('Tareas por hacer', this)">🟡 Por hacer</button>
-  <button class="filter-btn" onclick="filterStatus('Backlog', this)">🟣 Backlog</button>
-  <button class="filter-btn" onclick="filterStatus('Finalizada', this)">🟢 Finalizado</button>
-  <button class="filter-btn" onclick="filterStatus('Deprecado', this)">⚫ Deprecado</button>
+  <span class="filters-label">Estado</span>
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="En curso">En curso</button>
+  <button class="filter-btn" data-filter="Tareas por hacer">Por hacer</button>
+  <button class="filter-btn" data-filter="Backlog">Backlog</button>
+  <button class="filter-btn" data-filter="Validacion">Validación</button>
+  <button class="filter-btn" data-filter="Bloqueado">Bloqueado</button>
+  <button class="filter-btn" data-filter="Listo para refinamiento">Refinamiento</button>
+  <input class="search-input" type="text" placeholder="🔍  Buscar épica..." id="search-input"/>
 </div>
 
-<div class="section-title" id="section-label">Todos los proyectos</div>
-<div class="grid" id="grid"></div>
+<div class="grid-wrap">
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<div class="footer">Eleva Postventa · Grupo Kaufmann · Datos extraídos de Jira en tiempo real</div>
 
 <script>
-const today = new Date();
-document.getElementById('fecha-actual').textContent = today.toLocaleDateString('es-CL', {day:'2-digit',month:'long',year:'numeric'});
-
-const projects = [
-  {
-    key: "ELV-3456",
-    name: "Métricas de usabilidad Eleva",
-    desc: "Implementar métricas de usabilidad dentro de la plataforma Eleva para medir la experiencia y comportamiento de los usuarios en el sistema.",
-    due: null,
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3455",
-    name: "Resumen de productos en Venta Digital",
-    desc: "Incorporar un resumen consolidado de los productos disponibles en el módulo de Venta Digital, facilitando la visión global al asesor durante el proceso de venta.",
-    due: null,
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3454",
-    name: "Información de Garantía General y Garantía Extendida Cliente",
-    desc: "Mostrar al asesor la información de garantía general y garantía extendida del vehículo del cliente directamente en la plataforma Eleva.",
-    due: null,
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3428",
-    name: "Visualización de Última Fecha de Ingreso a Taller en Venta Digital",
-    desc: "Incorporar en el panel de venta digital de Eleva, mediante integración con API 360, la última fecha en que el vehículo ingresó a taller. Permite al asesor contextualizar la propuesta de servicios.",
-    due: null,
-    status: "Tareas por hacer",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-3387",
-    name: "Dimo en plataforma Eleva",
-    desc: "Habilitar la venta, cotización y facturación de productos Dimo dentro de la plataforma Eleva. Implementación del flujo comercial completo para este segmento.",
-    due: "2026-04-30",
-    status: "Tareas por hacer",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-3321",
-    name: "KPI paso vehicular",
-    desc: "Como gerente de sucursal, necesito que los vendedores y asesores coticen a todos los clientes que ingresan a la sucursal. Requiere visualización de KPIs de paso vehicular.",
-    due: null,
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3319",
-    name: "Semáforo de productos",
-    desc: "Como asesor de servicio, visualizar qué productos y servicios NO están contratados por cada vehículo de la cartera de clientes, para priorizar acciones comerciales.",
-    due: null,
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3300",
-    name: "Filtros Venta Digital",
-    desc: "Incorporar filtros avanzados en el módulo de Venta Digital de Eleva, permitiendo segmentar y buscar oportunidades de venta de forma más eficiente.",
-    due: "2025-12-31",
-    status: "En curso",
-    assignee: "Maximiliano Ipinza Ortega"
-  },
-  {
-    key: "ELV-3281",
-    name: "Portal Camiones",
-    desc: "Desarrollo del portal específico para el segmento de camiones dentro de la plataforma Eleva, adaptando los flujos de venta y postventa a las necesidades de este segmento.",
-    due: "2026-04-30",
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3156",
-    name: "Incrementales Agenda",
-    desc: "Mejoras incrementales al módulo de Agenda: anulación de reservas, registro de código de reserva en la card, creación de perfil asesor de callcenter y gestión de campañas.",
-    due: "2026-02-14",
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3150",
-    name: "Garantía Extendida en Venta Digital",
-    desc: "Llevar el módulo de Garantía Extendida al flujo de Venta Digital de Eleva, integrando cotización y venta de GE dentro del proceso comercial digital.",
-    due: null,
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3148",
-    name: "Klicker: Cotización Automática",
-    desc: "La Gerencia de Negocios Conectados requiere incorporar una cotización automática para el área Klicker dentro de Eleva, automatizando el proceso de oferta al cliente.",
-    due: "2026-03-31",
-    status: "Tareas por hacer",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-3124",
-    name: "Portal Smart Postventa — Indicadores por Sucursal",
-    desc: "Como Gerente de Postventa, visualizar en el Portal Smart los indicadores clave de sucursales y vendedores: NPS, metas, permanencia y otros KPIs de gestión.",
-    due: "2026-05-31",
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3122",
-    name: "Home Eleva",
-    desc: "Crear un nuevo Home para la plataforma Eleva con dashboards personalizados por perfil de asesor, centralizando métricas clave y accesos rápidos a los módulos principales.",
-    due: "2026-05-31",
-    status: "Tareas por hacer",
-    assignee: "Victor Asencio"
-  },
-  {
-    key: "ELV-3072",
-    name: "Incrementales Asistencia en Ruta",
-    desc: "Mejoras incrementales al módulo de Asistencia en Ruta. Incluye ajustes por marca (ej. excluir Smart), correcciones de flujo y adaptaciones según requerimientos operativos.",
-    due: null,
-    status: "Tareas por hacer",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3033",
-    name: "Perfil de cliente",
-    desc: "Integración de API Cliente 360 en Eleva. La fuerza de ventas actualmente no tiene una vista unificada del cliente; este módulo consolida historial, contratos y datos del cliente en un solo perfil.",
-    due: "2026-03-20",
-    status: "Backlog",
-    assignee: "Fernando Chazarreta"
-  },
-  {
-    key: "ELV-2995",
-    name: "Módulo de Certificados AndesMaq en Eleva",
-    desc: "Permitir a usuarios autorizados emitir, consultar, descargar y enviar certificados oficiales de AndesMaq directamente desde la plataforma Eleva.",
-    due: "2026-01-31",
-    status: "En curso",
-    assignee: "Victor Asencio"
-  },
-  {
-    key: "ELV-2965",
-    name: "Pautas de Mantenimiento Perú",
-    desc: "Visualización de las pautas de mantenimiento para la operación de Perú dentro de la plataforma Eleva, adaptando el módulo al contexto de ese mercado.",
-    due: null,
-    status: "Backlog",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-2913",
-    name: "Refactor: Mis Ventas Eleva",
-    desc: "Rediseño del módulo 'Mis Ventas': creación de solapas para Ventas Digitales y Ventas Manuales, botón de exportación a Excel e incorporación de nuevas métricas.",
-    due: null,
-    status: "Backlog",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-2912",
-    name: "Refactor: Mis Cotizaciones Eleva",
-    desc: "Rediseño del módulo 'Mis Cotizaciones' para incluir todos los productos cotizables en Eleva. Al seleccionar una cotización, despliega pantalla con información detallada.",
-    due: null,
-    status: "Backlog",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-2908",
-    name: "Aprobación Venta Manual 2.0",
-    desc: "Mejora del flujo de aprobación de ventas manuales, incorporando nuevas validaciones y optimizando el proceso de revisión y autorización por niveles jerárquicos.",
-    due: "2026-01-31",
-    status: "Finalizada",
-    assignee: "Victor Asencio"
-  },
-  {
-    key: "ELV-2907",
-    name: "Cotización Multiproducto y Multipaís Eleva",
-    desc: "Permitir la cotización de múltiples productos en una sola operación y extender la funcionalidad a diferentes países donde opera Grupo Kaufmann.",
-    due: null,
-    status: "Finalizada",
-    assignee: "Andrea"
-  },
-  {
-    key: "ELV-3245",
-    name: "[Hotfix] Client and idProduct",
-    desc: "Corrección de emergencia relacionada con la identificación de clientes y productos en la plataforma. Fix aplicado en producción.",
-    due: null,
-    status: "Finalizada",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-3297",
-    name: "[Back] Fix new manual sale",
-    desc: "Corrección en el backend del flujo de nueva venta manual. Tarea deprecada por cambio de enfoque en el módulo.",
-    due: null,
-    status: "Deprecado",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-2986",
-    name: "Carga Masiva Venta Manual KSA",
-    desc: "Funcionalidad de carga masiva para ventas manuales en la operación KSA. Deprecada por cambio en los requisitos del negocio.",
-    due: null,
-    status: "Deprecado",
-    assignee: "Mauricio Etchevest"
-  },
-  {
-    key: "ELV-2759",
-    name: "Eleva: Selling Speech 2.0",
-    desc: "Como asesor de servicio, acceder a la data de OT históricas y abiertas de un vehículo para tener más información contextual y mejorar el discurso de venta.",
-    due: "2026-04-30",
-    status: "Tareas por hacer",
-    assignee: "Andrea"
-  }
+const ALL_EPICS = [
+  { key:"ELV-3033", summary:"Perfil de cliente", status:"Validacion", duedate:"2026-03-20", assignee:"Fernando Chazarreta", description:"Centralizar información del cliente en Eleva con ficha 360°: vehículos, historial OT, contactabilidad y recomendaciones de IA para la fuerza de ventas." },
+  { key:"ELV-3456", summary:"Métricas de usabilidad Eleva", status:"Backlog", duedate:"2026-03-21", assignee:"Andrea", description:"Métricas de uso de Eleva para Gerencia de Servicios: frecuencia de ingreso por asesor, uso por sección y dimensiones como sucursal y país." },
+  { key:"ELV-3454", summary:"Información de Garantía General y Extendida", status:"Tareas por hacer", duedate:"2026-03-28", assignee:"Andrea", description:"Semáforo visual en Venta Digital para mostrar el estado de garantías del cliente y detectar oportunidades de venta de garantías extendidas." },
+  { key:"ELV-2965", summary:"Pautas de Mantenimiento en Eleva Perú", status:"Bloqueado 🚨", duedate:"2026-03-29", assignee:"Andrea", description:"Visualización de pautas de mantenimiento de vehículos dentro de Eleva para informar al cliente sobre los servicios recomendados según fabricante." },
+  { key:"ELV-2913", summary:"Refactor: Mis Ventas Eleva", status:"Backlog", duedate:"2026-04-06", assignee:"Mauricio Etchevest", description:"Rediseño de Mis Ventas con solapas digitales/manuales, filtros por campo, exportación a Excel, campo Categoría y KPIs resumen." },
+  { key:"ELV-3122", summary:"Home Eleva", status:"Tareas por hacer", duedate:"2026-04-15", assignee:"Victor Asencio", description:"Nuevo Home para Eleva con dashboards personalizados por perfil de asesor, información clave para la gestión diaria y acciones prioritarias." },
+  { key:"ELV-3491", summary:"Filtros Ofertas Originales vs Alternativos", status:"Backlog", duedate:"2026-04-18", assignee:"Andrea", description:"Filtros en el módulo de ofertas de servicio para distinguir entre repuestos originales y alternativas equivalentes en la propuesta comercial." },
+  { key:"ELV-2759", summary:"Selling Speech 2.0", status:"Tareas por hacer", duedate:"2026-04-30", assignee:"Andrea", description:"Acceso a datos de OT históricas y abiertas de un vehículo para mejorar la información disponible al momento de cotizar en Eleva." },
+  { key:"ELV-3124", summary:"Portal Smart — Indicadores por Sucursal", status:"Backlog", duedate:"2026-05-31", assignee:"Andrea", description:"Dashboard con indicadores de NPS, metas y permanencia por sucursal, con drill-down a nivel asesor/orden de trabajo y control de acceso por rol." },
+  { key:"ELV-3321", summary:"KPI Paso Vehicular", status:"Backlog", duedate:"2026-05-31", assignee:"Andrea", description:"Porcentaje de cotizaciones realizadas vs. clientes que visitan la sucursal para mejorar la proactividad comercial." },
+  { key:"ELV-3319", summary:"Semáforo de Productos", status:"Listo para refinamiento", duedate:"2026-06-14", assignee:"Andrea", description:"Indicador de productos y servicios no contratados por vehículo en la cartera de clientes para anticipar cotizaciones efectivas." },
+  { key:"ELV-3156", summary:"Incrementales Agenda", status:"Backlog", duedate:"2026-06-14", assignee:"Andrea", description:"Mejoras incrementales en la agenda: anulación de reservas, gestión para terceros y perfil call center para agendamiento multi-asesor." },
+  { key:"ELV-2912", summary:"Refactor: Mis Cotizaciones", status:"Backlog", duedate:"2026-06-25", assignee:"Mauricio Etchevest", description:"Rediseño de Mis Cotizaciones con todos los productos, filtros reenviar/re-cotizar, reenvío por WhatsApp y campos enriquecidos." },
+  { key:"ELV-3521", summary:"Whatsapp Eleva incluye asesor", status:"Backlog", duedate:null, assignee:"Andrea", description:"Integración de WhatsApp en Eleva incluyendo al asesor como parte del flujo de comunicación con el cliente." },
+  { key:"ELV-3072", summary:"Incrementales Asistencia en Ruta", status:"Tareas por hacer", duedate:null, assignee:"Andrea", description:"Exclusión de marca Smart de las cards de asistencia en ruta e incorporación al flujo de pago de Myservice para MB y Maxus." },
 ];
 
-function statusBadgeClass(status) {
-  const map = {
-    "En curso": "badge-en-curso",
-    "Tareas por hacer": "badge-por-hacer",
-    "Backlog": "badge-backlog",
-    "Finalizada": "badge-finalizado",
-    "Deprecado": "badge-deprecado"
-  };
-  return map[status] || "badge-backlog";
+const STATUS_MAP = {
+  "en curso":               { cls:"en-curso",     label:"En curso" },
+  "tareas por hacer":       { cls:"tareas",        label:"Por hacer" },
+  "backlog":                { cls:"backlog",       label:"Backlog" },
+  "validacion":             { cls:"validacion",    label:"Validación" },
+  "validación":             { cls:"validacion",    label:"Validación" },
+  "bloqueado 🚨":           { cls:"bloqueado",     label:"Bloqueado 🚨" },
+  "bloqueado":              { cls:"bloqueado",     label:"Bloqueado" },
+  "listo para refinamiento":{ cls:"refinamiento",  label:"Refinamiento" },
+  "refinamiento":           { cls:"refinamiento",  label:"Refinamiento" },
+};
+function getStatusInfo(s){ return STATUS_MAP[s.toLowerCase()] || { cls:"default", label: s }; }
+
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+const today30 = new Date(TODAY); today30.setDate(today30.getDate()+30);
+
+function fmtDate(d){ return new Date(d).toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'}); }
+function dueClass(d){
+  if(!d) return '';
+  const dt = new Date(d);
+  if(dt < TODAY) return 'overdue';
+  if(dt <= today30) return 'soon';
+  return '';
 }
 
-function formatDate(d) {
-  if (!d) return null;
-  const dt = new Date(d + 'T00:00:00');
-  return dt.toLocaleDateString('es-CL', {day:'2-digit', month:'short', year:'numeric'});
-}
+// KPIs
+document.getElementById('today-label').textContent = TODAY.toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const counts = { total: ALL_EPICS.length, enCurso:0, porHacer:0, backlog:0, bloqueado:0, valid:0 };
+ALL_EPICS.forEach(e => {
+  const sl = e.status.toLowerCase();
+  if(sl==='en curso') counts.enCurso++;
+  if(sl==='tareas por hacer') counts.porHacer++;
+  if(sl==='backlog') counts.backlog++;
+  if(sl.includes('bloqueado')) counts.bloqueado++;
+  if(sl.includes('validaci')) counts.valid++;
+});
 
-function dueDateClass(d) {
-  if (!d) return '';
-  const dt = new Date(d + 'T00:00:00');
-  const diff = (dt - today) / (1000 * 60 * 60 * 24);
-  if (diff < 0) return 'due-overdue';
-  if (diff <= 30) return 'due-soon';
-  return 'due-ok';
-}
+document.getElementById('kpi-row').innerHTML = `
+  <div class="kpi"><span class="kpi-icon">📊</span><div><div class="kpi-val c-blue">${counts.total}</div><div class="kpi-lbl">Total épicas</div></div></div>
+  <div class="kpi"><span class="kpi-icon">🔄</span><div><div class="kpi-val c-blue">${counts.enCurso}</div><div class="kpi-lbl">En curso</div></div></div>
+  <div class="kpi"><span class="kpi-icon">📌</span><div><div class="kpi-val c-amber">${counts.porHacer}</div><div class="kpi-lbl">Por hacer</div></div></div>
+  <div class="kpi"><span class="kpi-icon">📦</span><div><div class="kpi-val c-violet">${counts.backlog}</div><div class="kpi-lbl">Backlog</div></div></div>
+  <div class="kpi"><span class="kpi-icon">🚨</span><div><div class="kpi-val c-red">${counts.bloqueado}</div><div class="kpi-lbl">Bloqueados</div></div></div>
+  <div class="kpi"><span class="kpi-icon">✅</span><div><div class="kpi-val c-green">${counts.valid}</div><div class="kpi-lbl">En validación</div></div></div>
+`;
 
-function renderKPIs(data) {
-  const counts = {};
-  data.forEach(p => { counts[p.status] = (counts[p.status] || 0) + 1; });
-  const kpiDefs = [
-    {key:"En curso", label:"En curso", cls:"en-curso"},
-    {key:"Tareas por hacer", label:"Por hacer", cls:"por-hacer"},
-    {key:"Backlog", label:"Backlog", cls:"backlog"},
-    {key:"Finalizada", label:"Finalizados", cls:"finalizado"},
-    {key:"Deprecado", label:"Deprecados", cls:"deprecado"},
-  ];
-  document.getElementById('kpi-bar').innerHTML = kpiDefs.map(k => `
-    <div class="kpi-card ${k.cls}">
-      <span class="kpi-num">${counts[k.key] || 0}</span>
-      <span class="kpi-label">${k.label}</span>
-    </div>
-  `).join('') + `
-    <div class="kpi-card" style="border-left-color:#0f3460">
-      <span class="kpi-num" style="color:#0f3460">${data.length}</span>
-      <span class="kpi-label">Total épicas</span>
-    </div>
-  `;
-}
-
-function renderCards(data) {
-  const grid = document.getElementById('grid');
-  if (!data.length) {
-    grid.innerHTML = '<div class="no-results">No hay proyectos que coincidan con el filtro seleccionado.</div>';
+function renderCards(filter, search){
+  const grid = document.getElementById('cards-grid');
+  let epics = ALL_EPICS;
+  if(filter !== 'all'){
+    epics = epics.filter(e => {
+      const sl = e.status.toLowerCase();
+      const fl = filter.toLowerCase();
+      return sl === fl || sl.includes(fl.replace(' 🚨',''));
+    });
+  }
+  if(search){
+    const s = search.toLowerCase();
+    epics = epics.filter(e => e.summary.toLowerCase().includes(s) || e.key.toLowerCase().includes(s) || e.assignee.toLowerCase().includes(s));
+  }
+  if(epics.length === 0){
+    grid.innerHTML = `<div class="empty-state"><span>🔍</span>No se encontraron épicas con ese criterio.</div>`;
     return;
   }
-  grid.innerHTML = data.map(p => {
-    const dueStr = formatDate(p.due);
-    const dueClass = p.due ? dueDateClass(p.due) : '';
-    const dueSuffix = p.due && dueDateClass(p.due) === 'due-overdue' ? ' ⚠️' : '';
+  grid.innerHTML = epics.map(e => {
+    const si = getStatusInfo(e.status);
+    const dc = e.duedate ? dueClass(e.duedate) : '';
+    const dueStr = e.duedate ? fmtDate(e.duedate) : 'Sin fecha';
+    const dueIcon = !e.duedate ? '❓' : (dc==='overdue'?'🔴':dc==='soon'?'🟡':'📅');
     return `
-    <div class="card" data-status="${p.status}">
-      <div class="card-header">
-        <div>
-          <div class="card-key">${p.key}</div>
-          <div class="card-title">${p.name}</div>
+      <div class="card">
+        <div class="card-accent accent-${si.cls}"></div>
+        <div class="card-header">
+          <span class="card-key">${e.key}</span>
+          <span class="card-badge bg-${si.cls}">${si.label}</span>
         </div>
-        <span class="status-badge ${statusBadgeClass(p.status)}">${p.status}</span>
-      </div>
-      <div class="card-body">
-        <p class="card-desc">${p.desc}</p>
-      </div>
-      <div class="card-footer">
-        <div class="meta-item ${dueClass}">
-          <span class="meta-icon">📅</span>
-          <span>${dueStr ? '<strong>' + dueStr + '</strong>' + dueSuffix : '<span style="color:#cbd5e1">Sin fecha definida</span>'}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-icon">👤</span>
-          <strong>${p.assignee}</strong>
+        <div class="card-title">${e.summary}</div>
+        <div class="card-desc">${e.description}</div>
+        <div class="card-meta">
+          <span class="due ${dc}">${dueIcon} ${dueStr}</span>
+          <span>👤 ${e.assignee}</span>
         </div>
       </div>
-    </div>`;
+    `;
   }).join('');
 }
 
-let currentFilter = 'all';
-
-function filterStatus(status, btn) {
-  currentFilter = status;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const filtered = status === 'all' ? projects : projects.filter(p => p.status === status);
-  document.getElementById('section-label').textContent =
-    status === 'all' ? `Todos los proyectos (${projects.length})` : `${status} (${filtered.length})`;
-  renderCards(filtered);
-}
-
-// Initial render
-renderKPIs(projects);
-renderCards(projects);
-document.getElementById('section-label').textContent = `Todos los proyectos (${projects.length})`;
+let activeFilter = 'all', searchVal = '';
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    renderCards(activeFilter, searchVal);
+  });
+});
+document.getElementById('search-input').addEventListener('input', e => {
+  searchVal = e.target.value;
+  renderCards(activeFilter, searchVal);
+});
+renderCards('all','');
 </script>
 </body>
 </html>

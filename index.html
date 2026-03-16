@@ -3,74 +3,247 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Eleva · División Postventa</title>
+  <title>Eleva Postventa — Inicio</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #f0f2f5;
       min-height: 100vh;
-      display: flex; flex-direction: column;
+      display: flex;
+      flex-direction: column;
     }
+
+    /* ─── HEADER ─── */
     .header {
       background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%);
       color: white;
-      padding: 40px 48px;
+      padding: 40px 48px 48px;
       text-align: center;
     }
-    .header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
-    .header p  { color: #93c5fd; font-size: 0.9rem; margin-top: 8px; }
+    .header-logo {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header p {
+      color: #93c5fd;
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
 
-    .cards {
-      display: flex; gap: 24px; justify-content: center;
-      padding: 48px; flex-wrap: wrap; flex: 1;
+    /* ─── LAST UPDATE BADGE ─── */
+    .update-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #bfdbfe;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      margin-top: 16px;
     }
-    .card {
-      background: white; border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      padding: 36px 32px; width: 320px;
-      text-decoration: none; color: inherit;
-      display: flex; flex-direction: column; gap: 14px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      border-top: 5px solid #1d4ed8;
+    .update-dot {
+      width: 8px; height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
     }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(0,0,0,0.14); }
-    .card-icon { font-size: 2.8rem; }
-    .card-title { font-size: 1.15rem; font-weight: 800; color: #1e293b; }
-    .card-desc  { font-size: 0.85rem; color: #64748b; line-height: 1.6; }
-    .card-link  {
-      margin-top: auto; display: inline-flex; align-items: center; gap: 6px;
-      color: #2563eb; font-size: 0.82rem; font-weight: 700;
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.5; transform:scale(1.3); }
     }
-    .card:nth-child(2) { border-top-color: #7c3aed; }
 
-    .footer { text-align: center; padding: 20px; font-size: 0.75rem; color: #94a3b8; }
+    /* ─── CARDS SECTION ─── */
+    .cards-section {
+      flex: 1;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+    .cards-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 860px;
+      width: 100%;
+    }
+
+    /* ─── NAV CARD ─── */
+    .nav-card {
+      flex: 1; min-width: 280px; max-width: 400px;
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      text-decoration: none;
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: box-shadow 0.2s, transform 0.2s;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      border-radius: 20px 20px 0 0;
+    }
+    .nav-card.card-dashboard::before { background: linear-gradient(90deg, #7c3aed, #2563eb); }
+    .nav-card.card-roadmap::before   { background: linear-gradient(90deg, #2563eb, #0891b2); }
+
+    .nav-card:hover {
+      box-shadow: 0 12px 36px rgba(0,0,0,0.14);
+      transform: translateY(-4px);
+    }
+    .nav-card:hover.card-dashboard { border-color: #7c3aed22; }
+    .nav-card:hover.card-roadmap   { border-color: #2563eb22; }
+
+    .card-icon { font-size: 2.6rem; }
+    .card-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; }
+    .card-desc { font-size: 0.85rem; color: #64748b; line-height: 1.6; }
+    .card-tags {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-top: 4px;
+    }
+    .tag {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .tag-purple { background: #f3e8ff; color: #7c3aed; }
+    .tag-blue   { background: #dbeafe; color: #2563eb; }
+    .tag-cyan   { background: #cffafe; color: #0891b2; }
+
+    .card-arrow {
+      font-size: 1.4rem;
+      margin-top: auto;
+      color: #94a3b8;
+      text-align: right;
+    }
+
+    /* ─── STATS ROW ─── */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 860px;
+      width: 100%;
+    }
+    .stat-chip {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 20px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      min-width: 130px;
+    }
+    .stat-val { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .stat-lbl { font-size: 0.68rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 4px; }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.72rem;
+      color: #94a3b8;
+    }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>📊 Proyectos Eleva · División Postventa</h1>
-  <p>Grupo Kaufmann · División Tecnológica · Actualizado 15 mar 2026</p>
+  <div class="header-logo">🚗</div>
+  <h1>Eleva Postventa</h1>
+  <p>Panel central de seguimiento del roadmap y proyectos de la división Postventa de Grupo Kaufmann</p>
+  <div class="update-badge">
+    <div class="update-dot"></div>
+    <span id="update-text">Cargando...</span>
+  </div>
 </div>
 
-<div class="cards">
-  <a class="card" href="dashboard.html">
-    <div class="card-icon">🗂️</div>
-    <div class="card-title">Dashboard de Proyectos</div>
-    <div class="card-desc">Vista completa de todas las épicas del proyecto ELV con estado, fecha de entrega y responsable. Filtros por estado de planificación.</div>
-    <div class="card-link">Ver dashboard →</div>
-  </a>
+<div class="cards-section">
 
-  <a class="card" href="roadmap.html">
-    <div class="card-icon">🗺️</div>
-    <div class="card-title">Roadmap Postventa</div>
-    <div class="card-desc">Visualización Gantt de los proyectos con label Postventa ordenados por fecha de entrega. Timeline Ene–Jul 2026.</div>
-    <div class="card-link">Ver roadmap →</div>
-  </a>
+  <div class="stats-row" id="stats-row">
+    <div class="stat-chip">
+      <div class="stat-val" style="color:#2563eb" id="stat-total">15</div>
+      <div class="stat-lbl">Épicas totales</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-val" style="color:#d97706" id="stat-porhacer">4</div>
+      <div class="stat-lbl">Por hacer</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-val" style="color:#7c3aed" id="stat-backlog">8</div>
+      <div class="stat-lbl">Backlog</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-val" style="color:#059669" id="stat-valid">1</div>
+      <div class="stat-lbl">En validación</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-val" style="color:#dc2626" id="stat-bloq">1</div>
+      <div class="stat-lbl">Bloqueadas</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-val" style="color:#94a3b8" id="stat-nodate">2</div>
+      <div class="stat-lbl">Sin fecha</div>
+    </div>
+  </div>
+
+  <div class="cards-row">
+    <a href="dashboard.html" class="nav-card card-dashboard">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Dashboard de Épicas</div>
+      <div class="card-desc">Vista en grid de todas las épicas con sus estados, responsables, fechas y descripciones. Incluye filtros por estado y búsqueda libre.</div>
+      <div class="card-tags">
+        <span class="tag tag-purple">Tarjetas</span>
+        <span class="tag tag-purple">Filtros</span>
+        <span class="tag tag-purple">KPIs</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="roadmap.html" class="nav-card card-roadmap">
+      <div class="card-icon">📅</div>
+      <div class="card-title">Roadmap Gantt</div>
+      <div class="card-desc">Visualización temporal de las épicas en formato Gantt horizontal. Muestra inicio, fin, estado y quién está a cargo de cada entrega.</div>
+      <div class="card-tags">
+        <span class="tag tag-blue">Gantt</span>
+        <span class="tag tag-cyan">Línea de tiempo</span>
+        <span class="tag tag-blue">Tooltips</span>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+
 </div>
 
-<div class="footer">Fuente: Jira · elevaap.atlassian.net · Proyecto ELV · Label: Postventa</div>
+<div class="footer">Eleva Postventa · Grupo Kaufmann · Actualización automática desde Jira</div>
 
+<script>
+const TODAY = new Date();
+document.getElementById('update-text').textContent =
+  'Última actualización: ' + TODAY.toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+</script>
 </body>
 </html>

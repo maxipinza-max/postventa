@@ -47,530 +47,396 @@
     .c-violet { color: #7c3aed; }
     .c-green  { color: #059669; }
     .c-slate  { color: #94a3b8; }
+    .c-cyan   { color: #0891b2; }
 
-    /* ─── SECTION LABEL ─── */
-    .section { padding: 20px 48px 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; }
-
-    /* ─── LEGEND ─── */
-    .legend-row { display: flex; gap: 18px; padding: 0 48px 16px; flex-wrap: wrap; align-items: center; }
-    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #475569; font-weight: 500; }
-    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-
-    /* ─── GANTT WRAPPER ─── */
-    .gantt-wrapper { padding: 0 48px 32px; overflow-x: auto; }
-
-    .gantt {
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-      overflow: hidden;
-      min-width: 820px;
+    /* ─── CHART CONTAINER ─── */
+    .chart-wrap {
+      padding: 32px 48px;
     }
 
-    /* ─── TIMELINE HEADER ─── */
-    .tl-header { display: grid; background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
-    .tl-label-col {
-      padding: 11px 16px;
-      font-size: 0.72rem; font-weight: 700; color: #64748b;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      border-right: 1px solid #e2e8f0;
-      display: flex; align-items: center;
+    /* ─── MONTH HEADER ─── */
+    .gantt-header {
+      display: flex;
+      margin-left: 260px;
+      border-bottom: 2px solid #cbd5e1;
+      margin-bottom: 4px;
     }
-    .tl-month-cols { display: flex; }
-    .tl-month {
-      text-align: center;
-      font-size: 0.75rem; font-weight: 700; color: #334155;
-      padding: 11px 4px;
-      border-right: 1px solid #e8edf3;
-      text-transform: uppercase; letter-spacing: 0.5px;
+    .month-cell {
       flex: 1;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-bottom: 6px;
     }
-    .tl-month:last-child { border-right: none; }
-    .tl-month.current-month { color: #ef4444; background: #fff5f5; }
 
-    /* ─── ROW ─── */
+    /* ─── ROWS ─── */
     .gantt-row {
-      display: grid;
-      border-bottom: 1px solid #f1f5f9;
+      display: flex;
       align-items: center;
-      transition: background 0.15s;
+      padding: 5px 0;
+      border-bottom: 1px solid #f1f5f9;
+      position: relative;
     }
-    .gantt-row:last-child { border-bottom: none; }
     .gantt-row:hover { background: #f8fafc; }
 
-    .row-info {
-      padding: 10px 16px;
-      border-right: 1px solid #e2e8f0;
-      display: flex; flex-direction: column; gap: 3px;
+    .row-label {
+      width: 260px;
+      min-width: 260px;
+      padding-right: 16px;
     }
-    .row-key   { font-size: 0.67rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.5px; }
-    .row-title { font-size: 0.81rem; font-weight: 700; color: #1e293b; line-height: 1.3; }
-    .row-meta  { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 1px; }
-    .row-assignee { font-size: 0.69rem; color: #64748b; }
-
-    .status-pill {
-      display: inline-block;
-      padding: 2px 8px; border-radius: 10px;
-      font-size: 0.63rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.3px;
+    .row-key {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      font-weight: 600;
+      font-family: monospace;
     }
-    .pill-en-curso     { background: #dbeafe; color: #1d4ed8; }
-    .pill-por-hacer    { background: #fef3c7; color: #92400e; }
-    .pill-backlog      { background: #ede9fe; color: #5b21b6; }
-    .pill-validacion   { background: #d1fae5; color: #065f46; }
-    .pill-bloqueado    { background: #fee2e2; color: #991b1b; }
-    .pill-refinamiento { background: #e0f2fe; color: #0369a1; }
-
-    .row-timeline { position: relative; }
-
-    /* Grid lines */
-    .month-line {
-      position: absolute; top: 0; bottom: 0;
-      width: 1px; background: #f1f5f9; z-index: 1;
+    .row-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
     }
-    .month-line.current { background: #fecaca; width: 2px; }
+    .row-assignee {
+      font-size: 0.68rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
 
-    /* Today line */
+    /* ─── GRID + BARS ─── */
+    .gantt-grid {
+      flex: 1;
+      position: relative;
+      height: 48px;
+    }
+    .grid-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: #e2e8f0;
+    }
     .today-line {
-      position: absolute; top: 0; bottom: 0;
-      width: 2px; background: #ef4444; z-index: 3;
+      position: absolute;
+      top: -8px; bottom: -8px;
+      width: 2px;
+      background: #ef4444;
+      z-index: 10;
     }
-    .today-label {
-      position: absolute; top: 3px;
+    .today-line::before {
+      content: 'Hoy';
+      position: absolute;
+      top: -20px;
+      left: 50%;
       transform: translateX(-50%);
-      font-size: 0.58rem; font-weight: 800; color: #ef4444;
-      background: #fee2e2; padding: 1px 5px; border-radius: 4px;
-      white-space: nowrap; z-index: 4;
+      font-size: 0.65rem;
+      color: #ef4444;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
-    /* Bar */
-    .bar-outer {
+    .gantt-bar {
       position: absolute;
-      height: 26px;
-      top: 50%; transform: translateY(-50%);
+      top: 50%;
+      transform: translateY(-50%);
+      height: 28px;
       border-radius: 6px;
-      z-index: 2;
-      display: flex; align-items: center; justify-content: flex-end;
-      padding-right: 7px;
-      min-width: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       cursor: pointer;
-      transition: filter 0.15s;
+      transition: opacity 0.15s, box-shadow 0.15s;
+      min-width: 8px;
     }
-    .bar-outer:hover { filter: brightness(0.92); }
-    .bar-date-label {
-      font-size: 0.67rem; font-weight: 700; color: white;
-      white-space: nowrap; position: relative; z-index: 1;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+    .gantt-bar:hover { opacity: 0.88; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+    /* ─── STATUS COLORS ─── */
+    .s-en-curso       { background: #2563eb; }
+    .s-tareas         { background: #d97706; }
+    .s-backlog        { background: #7c3aed; }
+    .s-validacion     { background: #059669; }
+    .s-bloqueado      { background: #dc2626; }
+    .s-refinamiento   { background: #0891b2; }
+    .s-default        { background: #64748b; }
+
+    /* ─── LEGEND ─── */
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      margin-bottom: 28px;
+      align-items: center;
+    }
+    .legend-title { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
+    .legend-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; color: #475569;
+    }
+    .legend-dot {
+      width: 12px; height: 12px; border-radius: 3px;
     }
 
-    /* Milestone diamond at due date */
-    .milestone {
-      position: absolute;
-      width: 12px; height: 12px;
-      transform: translateY(-50%) rotate(45deg);
-      top: 50%; z-index: 3;
-      border: 2px solid white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    /* ─── NO-DATE TABLE ─── */
+    .nodate-section {
+      padding: 0 48px 32px;
     }
+    .nodate-title {
+      font-size: 0.85rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .nodate-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .nodate-table th {
+      background: #f8fafc;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748b;
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .nodate-table td {
+      padding: 10px 16px;
+      font-size: 0.82rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+    }
+    .nodate-table tr:last-child td { border-bottom: none; }
 
     /* ─── TOOLTIP ─── */
-    .tooltip {
-      display: none;
+    #tooltip {
       position: fixed;
-      background: #1e293b;
+      background: #0f172a;
       color: white;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 0.76rem;
-      line-height: 1.6;
-      max-width: 260px;
-      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.78rem;
       pointer-events: none;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 999;
+      max-width: 280px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      display: none;
+      line-height: 1.6;
     }
-    .tooltip.visible { display: block; }
-    .tt-title { font-weight: 700; margin-bottom: 4px; font-size: 0.8rem; }
-    .tt-row { display: flex; gap: 8px; }
-    .tt-label { color: #94a3b8; min-width: 60px; }
+    #tooltip strong { display: block; font-size: 0.85rem; margin-bottom: 4px; color: #93c5fd; }
+    #tooltip .tip-row { color: #cbd5e1; }
+    #tooltip .tip-status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; margin-top: 4px; }
 
-    /* ─── NO DATE TABLE ─── */
-    .pending-section { padding: 0 48px 40px; }
-    .pending-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 12px; }
-    .pending-table {
-      background: white; border-radius: 14px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-      overflow: hidden; width: 100%; border-collapse: collapse;
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.72rem;
+      color: #94a3b8;
     }
-    .pending-table th {
-      background: #f8fafc; padding: 10px 16px; text-align: left;
-      font-size: 0.72rem; color: #64748b; text-transform: uppercase;
-      letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0;
-    }
-    .pending-table td { padding: 12px 16px; font-size: 0.82rem; border-bottom: 1px solid #f1f5f9; }
-    .pending-table tr:last-child td { border-bottom: none; }
-    .pending-table tr:hover td { background: #f8fafc; }
-    .td-key  { color: #94a3b8; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
-    .td-name { font-weight: 600; color: #1e293b; }
-    .td-desc { color: #64748b; font-size: 0.78rem; }
-
-    .footer { text-align: center; padding: 20px; font-size: 0.72rem; color: #94a3b8; }
-
-    /* Change badge */
-    .new-badge { display: inline-block; background: #d1fae5; color: #065f46; font-size: 0.6rem; font-weight: 800; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; }
-    .updated-badge { display: inline-block; background: #fef3c7; color: #92400e; font-size: 0.6rem; font-weight: 800; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div>
-    <h1>🗺️ Roadmap Postventa · Eleva</h1>
-    <p>Épicas con label <strong style="color:#bfdbfe">Postventa</strong> · Grupo Kaufmann · División Tecnológica</p>
+    <h1>📅 Roadmap Postventa — Eleva</h1>
+    <p>Épicas del proyecto ELV con label Postventa · Fuente: Jira</p>
   </div>
   <div class="header-meta">
-    <strong id="fecha-hoy"></strong>
-    jira.elevaap.atlassian.net / ELV
+    <strong id="today-label"></strong>
+    Actualizado automáticamente
   </div>
 </div>
 
-<!-- KPIs -->
-<div class="kpi-row">
-  <div class="kpi">
-    <span class="kpi-icon">📋</span>
-    <div><div class="kpi-val c-violet">15</div><div class="kpi-lbl">Épicas Postventa</div></div>
+<div class="kpi-row" id="kpi-row"></div>
+
+<div class="chart-wrap">
+  <div class="legend">
+    <span class="legend-title">Estado</span>
+    <span class="legend-item"><span class="legend-dot s-en-curso"></span>En curso</span>
+    <span class="legend-item"><span class="legend-dot s-tareas"></span>Tareas por hacer</span>
+    <span class="legend-item"><span class="legend-dot s-backlog"></span>Backlog</span>
+    <span class="legend-item"><span class="legend-dot s-validacion"></span>Validación</span>
+    <span class="legend-item"><span class="legend-dot s-bloqueado"></span>Bloqueado</span>
+    <span class="legend-item"><span class="legend-dot s-refinamiento"></span>Refinamiento</span>
   </div>
-  <div class="kpi">
-    <span class="kpi-icon">📅</span>
-    <div><div class="kpi-val c-blue">13</div><div class="kpi-lbl">Con fecha de entrega</div></div>
-  </div>
-  <div class="kpi">
-    <span class="kpi-icon">🔜</span>
-    <div><div class="kpi-val c-amber">5</div><div class="kpi-lbl">Próximos 30 días</div></div>
-  </div>
-  <div class="kpi">
-    <span class="kpi-icon">🚨</span>
-    <div><div class="kpi-val c-red">1</div><div class="kpi-lbl">Bloqueados</div></div>
-  </div>
-  <div class="kpi">
-    <span class="kpi-icon">✅</span>
-    <div><div class="kpi-val c-green">1</div><div class="kpi-lbl">En validación</div></div>
-  </div>
-  <div class="kpi">
-    <span class="kpi-icon">📭</span>
-    <div><div class="kpi-val c-slate">2</div><div class="kpi-lbl">Sin fecha</div></div>
-  </div>
+
+  <div class="gantt-header" id="gantt-header"></div>
+  <div id="gantt-body"></div>
 </div>
 
-<!-- LEGEND -->
-<div class="section">Roadmap · 13 proyectos con fecha de entrega — Ene a Jul 2026</div>
-<div class="legend-row">
-  <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div> En curso</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Tareas por hacer</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> Backlog</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Validación</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Bloqueado</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#0ea5e9"></div> Refinamiento</div>
-  <div class="legend-item" style="gap:4px">
-    <div style="width:2px;height:14px;background:#ef4444;border-radius:1px"></div> Hoy (15 mar)
-  </div>
-</div>
+<div class="nodate-section" id="nodate-section"></div>
 
-<!-- GANTT CHART -->
-<div class="gantt-wrapper">
-  <div class="gantt" id="gantt-container"></div>
-</div>
+<div class="footer">Eleva Postventa · Grupo Kaufmann · Datos extraídos de Jira en tiempo real</div>
 
-<!-- WITHOUT DATE -->
-<div class="pending-section">
-  <div class="pending-title">📭 Proyectos sin fecha de entrega (2)</div>
-  <table class="pending-table">
-    <thead>
-      <tr>
-        <th>ID</th><th>Proyecto</th><th>Descripción</th><th>Estado</th><th>Responsable</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="td-key">ELV-3521</td>
-        <td class="td-name">Whatsapp Eleva incluye asesor</td>
-        <td class="td-desc">Incorporación del asesor en los flujos de comunicación vía WhatsApp dentro de la plataforma Eleva.</td>
-        <td><span class="status-pill pill-backlog">Backlog</span></td>
-        <td>Andrea</td>
-      </tr>
-      <tr>
-        <td class="td-key">ELV-3072</td>
-        <td class="td-name">Incrementales Asistencia en Ruta</td>
-        <td class="td-desc">Ajustes operativos al módulo de asistencia en ruta: exclusiones por marca Smart y correcciones de flujo.</td>
-        <td><span class="status-pill pill-por-hacer">Por hacer</span></td>
-        <td>Andrea</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="footer">Fuente: Jira · elevaap.atlassian.net · Proyecto ELV · Label: Postventa · Actualizado 15 mar 2026</div>
-
-<!-- TOOLTIP -->
-<div class="tooltip" id="tooltip">
-  <div class="tt-title" id="tt-title"></div>
-  <div class="tt-row"><span class="tt-label">Fecha:</span><span id="tt-due"></span></div>
-  <div class="tt-row"><span class="tt-label">Estado:</span><span id="tt-status"></span></div>
-  <div class="tt-row"><span class="tt-label">Resp.:</span><span id="tt-assignee"></span></div>
-  <div class="tt-row" style="margin-top:6px"><span style="color:#cbd5e1;font-size:0.72rem" id="tt-desc"></span></div>
-</div>
+<div id="tooltip"></div>
 
 <script>
-  const LABEL_WIDTH = 290;
-  const ROW_H = 54;
-  const today = new Date('2026-03-15T00:00:00');
+const EPICS = [
+  { key:"ELV-3033", summary:"Perfil de cliente", status:"Validacion", start:"2026-01-01", end:"2026-03-20", assignee:"Fernando Chazarreta" },
+  { key:"ELV-3456", summary:"Métricas de usabilidad Eleva", status:"Backlog", start:"2026-03-14", end:"2026-03-21", assignee:"Andrea" },
+  { key:"ELV-3454", summary:"Información de Garantía General y Extendida", status:"Tareas por hacer", start:"2026-03-22", end:"2026-03-28", assignee:"Andrea" },
+  { key:"ELV-2965", summary:"Pautas de Mantenimiento (Perú)", status:"Bloqueado 🚨", start:"2026-03-19", end:"2026-03-29", assignee:"Andrea" },
+  { key:"ELV-2913", summary:"Refactor: Mis Ventas", status:"Backlog", start:"2026-03-24", end:"2026-04-06", assignee:"Mauricio Etchevest" },
+  { key:"ELV-3122", summary:"Home Eleva", status:"Tareas por hacer", start:"2026-03-13", end:"2026-04-15", assignee:"Victor Asencio" },
+  { key:"ELV-3491", summary:"Filtros Ofertas Originales vs Alternativos", status:"Backlog", start:"2026-04-12", end:"2026-04-18", assignee:"Andrea" },
+  { key:"ELV-2759", summary:"Selling Speech 2.0", status:"Tareas por hacer", start:"2026-04-01", end:"2026-04-30", assignee:"Andrea" },
+  { key:"ELV-3124", summary:"Portal Smart — Indicadores por Sucursal", status:"Backlog", start:"2026-04-01", end:"2026-05-31", assignee:"Andrea" },
+  { key:"ELV-3321", summary:"KPI Paso Vehicular", status:"Backlog", start:"2026-05-18", end:"2026-05-31", assignee:"Andrea" },
+  { key:"ELV-3319", summary:"Semáforo de Productos", status:"Listo para refinamiento", start:"2026-06-01", end:"2026-06-14", assignee:"Andrea" },
+  { key:"ELV-3156", summary:"Incrementales Agenda", status:"Backlog", start:"2026-06-01", end:"2026-06-14", assignee:"Andrea" },
+  { key:"ELV-2912", summary:"Refactor: Mis Cotizaciones", status:"Backlog", start:"2026-06-12", end:"2026-06-25", assignee:"Mauricio Etchevest" },
+];
 
-  document.getElementById('fecha-hoy').textContent =
-    today.toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'});
+const NODATE = [
+  { key:"ELV-3521", summary:"Whatsapp Eleva incluye asesor", status:"Backlog", assignee:"Andrea" },
+  { key:"ELV-3072", summary:"Incrementales Asistencia en Ruta", status:"Tareas por hacer", assignee:"Andrea" },
+];
 
-  // Timeline: Jan 1 → Jul 15 2026
-  const START = new Date('2026-01-01');
-  const END   = new Date('2026-07-15');
-  const totalMs = END - START;
+const STATUS_CLASS = {
+  "en curso":               "s-en-curso",
+  "tareas por hacer":       "s-tareas",
+  "backlog":                "s-backlog",
+  "validacion":             "s-validacion",
+  "validación":             "s-validacion",
+  "bloqueado":              "s-bloqueado",
+  "bloqueado 🚨":           "s-bloqueado",
+  "listo para refinamiento":"s-refinamiento",
+  "refinamiento":           "s-refinamiento",
+};
 
-  const MONTHS = [
-    { label: 'Ene', date: new Date('2026-01-01') },
-    { label: 'Feb', date: new Date('2026-02-01') },
-    { label: 'Mar', date: new Date('2026-03-01') },
-    { label: 'Abr', date: new Date('2026-04-01') },
-    { label: 'May', date: new Date('2026-05-01') },
-    { label: 'Jun', date: new Date('2026-06-01') },
-    { label: 'Jul', date: new Date('2026-07-01') },
-  ];
+function statusClass(s){ return STATUS_CLASS[s.toLowerCase()] || "s-default"; }
 
-  const projects = [
-    {
-      key: 'ELV-3033', name: 'Perfil de cliente',
-      desc: 'Integración API Cliente 360: vista unificada del cliente con historial, contratos y datos centralizados.',
-      due: '2026-03-20', status: 'Validación', assignee: 'Fernando Chazarreta',
-      startEst: '2026-01-01', changed: null
-    },
-    {
-      key: 'ELV-3456', name: 'Métricas de usabilidad Eleva',
-      desc: 'KPIs de uso de la plataforma para Gerencia de Servicios: frecuencia, funcionalidades más usadas.',
-      due: '2026-03-21', status: 'Backlog', assignee: 'Andrea',
-      startEst: '2026-03-14', changed: null
-    },
-    {
-      key: 'ELV-3454', name: 'Info Garantía General y Extendida',
-      desc: 'Visualizar garantías vigentes del cliente (General y Extendida) para identificar oportunidades comerciales.',
-      due: '2026-03-28', status: 'Tareas por hacer', assignee: 'Andrea',
-      startEst: '2026-03-22', changed: null
-    },
-    {
-      key: 'ELV-2965', name: 'Pautas de Mantenimiento Perú',
-      desc: 'Visualización de pautas de mantenimiento de vehículos dentro de Eleva para la operación de Perú.',
-      due: '2026-03-29', status: 'Bloqueado 🚨', assignee: 'Andrea',
-      startEst: '2026-03-19', changed: null
-    },
-    {
-      key: 'ELV-2913', name: 'Refactor: Mis Ventas Eleva',
-      desc: 'Rediseño del módulo: solapas Ventas Digitales/Manuales, exportación a Excel y nuevas métricas.',
-      due: '2026-04-06', status: 'Backlog', assignee: 'Mauricio Etchevest',
-      startEst: '2026-03-24', changed: null
-    },
-    {
-      key: 'ELV-3122', name: 'Home Eleva',
-      desc: 'Nuevo Home con dashboards personalizados por perfil de asesor y accesos rápidos a módulos principales.',
-      due: '2026-04-15', status: 'Tareas por hacer', assignee: 'Victor Asencio',
-      startEst: '2026-03-13', changed: null
-    },
-    {
-      key: 'ELV-3491', name: 'Filtros Ofertas Originales vs Alternativos',
-      desc: 'Filtrar ofertas de servicio según uso de repuestos originales o alternativos para ofrecer opciones al cliente.',
-      due: '2026-04-18', status: 'Backlog', assignee: 'Andrea',
-      startEst: '2026-04-12', changed: null
-    },
-    {
-      key: 'ELV-2759', name: 'Eleva: Selling Speech 2.0',
-      desc: 'Acceso a OT históricas y abiertas de un vehículo para enriquecer el discurso de venta del asesor.',
-      due: '2026-04-30', status: 'Tareas por hacer', assignee: 'Andrea',
-      startEst: '2026-04-01', changed: null
-    },
-    {
-      key: 'ELV-3124', name: 'Portal Smart Postventa',
-      desc: 'Indicadores NPS, metas y permanencia por sucursal y vendedor para el Gerente de Postventa.',
-      due: '2026-05-31', status: 'Backlog', assignee: 'Andrea',
-      startEst: '2026-04-01', changed: null
-    },
-    {
-      key: 'ELV-3321', name: 'KPI paso vehicular',
-      desc: '% de cotizaciones realizadas vs vehículos que ingresaron a la sucursal, para seguimiento de gestión comercial.',
-      due: '2026-05-31', status: 'Backlog', assignee: 'Andrea',
-      startEst: '2026-05-18', changed: null
-    },
-    {
-      key: 'ELV-3319', name: 'Semáforo de productos',
-      desc: 'Visualizar qué productos y servicios NO están contratados por cada vehículo de la cartera de clientes.',
-      due: '2026-06-14', status: 'Refinamiento', assignee: 'Andrea',
-      startEst: '2026-06-01', changed: null
-    },
-    {
-      key: 'ELV-3156', name: 'Incrementales Agenda',
-      desc: 'Mayor flexibilidad en la gestión de agenda: anulaciones de reservas, administración de citas y mejoras operativas.',
-      due: '2026-06-14', status: 'Backlog', assignee: 'Andrea',
-      startEst: '2026-06-01', changed: null
-    },
-    {
-      key: 'ELV-2912', name: 'Refactor: Mis Cotizaciones Eleva',
-      desc: 'Rediseño del módulo para incluir todos los productos cotizables con información detallada por cotización.',
-      due: '2026-06-25', status: 'Backlog', assignee: 'Mauricio Etchevest',
-      startEst: '2026-06-12', changed: null
-    },
-  ];
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+const fmtDate = d => d ? new Date(d).toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'}) : '—';
 
-  // ─── helpers ────────────────────────────────────────
-  function pct(d) {
-    return Math.max(0, Math.min(100, ((new Date(d + 'T00:00:00') - START) / totalMs) * 100));
-  }
-  function statusPillClass(s) {
-    if (s === 'En curso')          return 'pill-en-curso';
-    if (s === 'Tareas por hacer')  return 'pill-por-hacer';
-    if (s === 'Backlog')           return 'pill-backlog';
-    if (s === 'Validación')        return 'pill-validacion';
-    if (s.includes('Bloqueado'))   return 'pill-bloqueado';
-    if (s.includes('refinamiento') || s === 'Refinamiento') return 'pill-refinamiento';
-    return 'pill-backlog';
-  }
-  function barColor(s) {
-    if (s === 'En curso')          return '#2563eb';
-    if (s === 'Tareas por hacer')  return '#f59e0b';
-    if (s === 'Backlog')           return '#8b5cf6';
-    if (s === 'Validación')        return '#10b981';
-    if (s.includes('Bloqueado'))   return '#ef4444';
-    if (s.includes('refinamiento') || s === 'Refinamiento') return '#0ea5e9';
-    return '#8b5cf6';
-  }
-  function fmtDate(d) {
-    return new Date(d + 'T00:00:00').toLocaleDateString('es-CL',{day:'2-digit',month:'short', year:'2-digit'});
-  }
+// ── TIMELINE: Jan–Jul 2026
+const TL_START = new Date('2026-01-01');
+const TL_END   = new Date('2026-07-01');
+const TL_DAYS  = (TL_END - TL_START) / 86400000;
 
-  // ─── build gantt ────────────────────────────────────
-  const gantt = document.getElementById('gantt-container');
+function pct(dateStr){
+  const d = new Date(dateStr); d.setHours(0,0,0,0);
+  return Math.max(0, Math.min(100, (d - TL_START) / (TL_END - TL_START) * 100));
+}
 
-  // header row
-  const hdr = document.createElement('div');
-  hdr.className = 'tl-header';
-  hdr.style.gridTemplateColumns = `${LABEL_WIDTH}px 1fr`;
-  hdr.innerHTML = `
-    <div class="tl-label-col">Proyecto</div>
-    <div class="tl-month-cols" id="month-cols"></div>`;
-  gantt.appendChild(hdr);
+// ── KPIs
+const today30 = new Date(TODAY); today30.setDate(today30.getDate()+30);
+const kpiTotal    = EPICS.length + NODATE.length;
+const kpiConFecha = EPICS.length;
+const kpiProx30   = EPICS.filter(e => { const d=new Date(e.end); return d >= TODAY && d <= today30; }).length;
+const kpiBloq     = EPICS.filter(e => e.status.toLowerCase().includes('bloqueado')).length + NODATE.filter(e=>e.status.toLowerCase().includes('bloqueado')).length;
+const kpiValid    = EPICS.filter(e => e.status.toLowerCase().includes('validaci')).length;
+const kpiSinFecha = NODATE.length;
 
-  MONTHS.forEach(m => {
-    const isCurrent = m.date.getMonth() === today.getMonth() && m.date.getFullYear() === today.getFullYear();
-    const el = document.createElement('div');
-    el.className = 'tl-month' + (isCurrent ? ' current-month' : '');
-    el.textContent = m.label + (isCurrent ? ' ▼' : '');
-    hdr.querySelector('#month-cols').appendChild(el);
-  });
+document.getElementById('today-label').textContent = TODAY.toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
-  const todayPct = pct(today.toISOString().split('T')[0]);
-  let firstRow = true;
+document.getElementById('kpi-row').innerHTML = `
+  <div class="kpi"><span class="kpi-icon">📊</span><div><div class="kpi-val c-blue">${kpiTotal}</div><div class="kpi-lbl">Total épicas</div></div></div>
+  <div class="kpi"><span class="kpi-icon">📅</span><div><div class="kpi-val c-violet">${kpiConFecha}</div><div class="kpi-lbl">Con fecha</div></div></div>
+  <div class="kpi"><span class="kpi-icon">⚡</span><div><div class="kpi-val c-amber">${kpiProx30}</div><div class="kpi-lbl">Próximos 30 días</div></div></div>
+  <div class="kpi"><span class="kpi-icon">🚨</span><div><div class="kpi-val c-red">${kpiBloq}</div><div class="kpi-lbl">Bloqueados</div></div></div>
+  <div class="kpi"><span class="kpi-icon">✅</span><div><div class="kpi-val c-green">${kpiValid}</div><div class="kpi-lbl">En validación</div></div></div>
+  <div class="kpi"><span class="kpi-icon">❓</span><div><div class="kpi-val c-slate">${kpiSinFecha}</div><div class="kpi-lbl">Sin fecha</div></div></div>
+`;
 
-  projects.forEach(p => {
-    const sp = pct(p.startEst);
-    const ep = pct(p.due);
-    const bw = Math.max(ep - sp, 0.5);
-    const color = barColor(p.status);
+// ── MONTH HEADERS
+const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul'];
+const headerEl = document.getElementById('gantt-header');
+months.forEach(m => {
+  const el = document.createElement('div');
+  el.className = 'month-cell';
+  el.textContent = m + ' 2026';
+  headerEl.appendChild(el);
+});
 
-    const row = document.createElement('div');
-    row.className = 'gantt-row';
-    row.style.gridTemplateColumns = `${LABEL_WIDTH}px 1fr`;
+// ── GANTT ROWS
+const body = document.getElementById('gantt-body');
+const todayPct = pct(TODAY.toISOString().slice(0,10));
 
-    let changedBadge = '';
-    if (p.changed === 'new')     changedBadge = '<span class="new-badge">NUEVO</span>';
-    if (p.changed === 'updated') changedBadge = '<span class="updated-badge">ACTUALIZADO</span>';
+EPICS.forEach((epic, i) => {
+  const row = document.createElement('div');
+  row.className = 'gantt-row';
 
-    row.innerHTML = `
-      <div class="row-info">
-        <div class="row-key">${p.key}</div>
-        <div class="row-title">${p.name}${changedBadge}</div>
-        <div class="row-meta">
-          <span class="status-pill ${statusPillClass(p.status)}">${p.status}</span>
-          <span class="row-assignee">👤 ${p.assignee}</span>
-        </div>
-      </div>
-      <div class="row-timeline" style="position:relative;height:${ROW_H}px;" id="tl-${p.key}"></div>`;
-    gantt.appendChild(row);
+  const startPct = pct(epic.start);
+  const endPct   = pct(epic.end);
+  const widthPct = Math.max(0.5, endPct - startPct);
+  const sc = statusClass(epic.status);
 
-    const tl = row.querySelector(`#tl-${p.key}`);
+  row.innerHTML = `
+    <div class="row-label">
+      <div class="row-key">${epic.key}</div>
+      <div class="row-name" title="${epic.summary}">${epic.summary}</div>
+      <div class="row-assignee">👤 ${epic.assignee}</div>
+    </div>
+    <div class="gantt-grid" id="grid-${i}">
+      ${months.map((_,mi) => `<div class="grid-line" style="left:${mi/7*100}%"></div>`).join('')}
+      ${i===0 ? `<div class="today-line" style="left:${todayPct}%"></div>` : `<div class="today-line" style="left:${todayPct}%;top:0;bottom:0;position:absolute;width:2px;background:#ef4444;z-index:10;"></div>`}
+      <div class="gantt-bar ${sc}"
+           style="left:${startPct}%;width:${widthPct}%;"
+           data-key="${epic.key}"
+           data-summary="${epic.summary}"
+           data-status="${epic.status}"
+           data-start="${epic.start}"
+           data-end="${epic.end}"
+           data-assignee="${epic.assignee}"
+      >${widthPct > 6 ? epic.summary : ''}</div>
+    </div>
+  `;
+  body.appendChild(row);
+});
 
-    // Month lines
-    MONTHS.forEach(m => {
-      const mp = pct(m.date.toISOString().split('T')[0]);
-      const isCurrent = m.date.getMonth() === today.getMonth();
-      const line = document.createElement('div');
-      line.className = 'month-line' + (isCurrent ? ' current' : '');
-      line.style.left = mp + '%';
-      tl.appendChild(line);
-    });
+// ── NO-DATE TABLE
+const nodateSection = document.getElementById('nodate-section');
+if(NODATE.length > 0){
+  nodateSection.innerHTML = `
+    <div class="nodate-title">⚠️ Épicas sin fecha de entrega (${NODATE.length})</div>
+    <table class="nodate-table">
+      <thead><tr><th>Clave</th><th>Nombre</th><th>Estado</th><th>Responsable</th></tr></thead>
+      <tbody>
+        ${NODATE.map(e => `
+          <tr>
+            <td><code style="font-size:0.78rem;color:#7c3aed;">${e.key}</code></td>
+            <td>${e.summary}</td>
+            <td><span style="padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;color:white;" class="${statusClass(e.status)}">${e.status}</span></td>
+            <td>${e.assignee}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
 
-    // Today line
-    const tline = document.createElement('div');
-    tline.className = 'today-line';
-    tline.style.left = todayPct + '%';
-    tl.appendChild(tline);
-
-    if (firstRow) {
-      const tlabel = document.createElement('div');
-      tlabel.className = 'today-label';
-      tlabel.style.left = todayPct + '%';
-      tlabel.textContent = 'HOY';
-      tl.appendChild(tlabel);
-      firstRow = false;
-    }
-
-    // Bar
-    const bar = document.createElement('div');
-    bar.className = 'bar-outer';
-    const isBlocked = p.status.includes('Bloqueado');
-    bar.style.cssText = `
-      left: ${sp}%;
-      width: ${bw}%;
-      background: ${isBlocked
-        ? 'repeating-linear-gradient(45deg, #fca5a5, #fca5a5 6px, #fecaca 6px, #fecaca 12px)'
-        : color};
-      border: 2px solid ${isBlocked ? '#ef4444' : 'transparent'};
+// ── TOOLTIP
+const tooltip = document.getElementById('tooltip');
+document.querySelectorAll('.gantt-bar').forEach(bar => {
+  bar.addEventListener('mousemove', e => {
+    const sc = statusClass(bar.dataset.status);
+    tooltip.innerHTML = `
+      <strong>${bar.dataset.key} · ${bar.dataset.summary}</strong>
+      <div class="tip-row">📅 Inicio: ${fmtDate(bar.dataset.start)}</div>
+      <div class="tip-row">🏁 Fin: ${fmtDate(bar.dataset.end)}</div>
+      <div class="tip-row">👤 ${bar.dataset.assignee}</div>
+      <span class="tip-status ${sc}">${bar.dataset.status}</span>
     `;
-
-    const dLabel = document.createElement('div');
-    dLabel.className = 'bar-date-label';
-    dLabel.style.color = isBlocked ? '#991b1b' : 'white';
-    dLabel.textContent = fmtDate(p.due);
-    bar.appendChild(dLabel);
-
-    // Tooltip events
-    const tooltip = document.getElementById('tooltip');
-    bar.addEventListener('mouseenter', (e) => {
-      document.getElementById('tt-title').textContent = `${p.key} · ${p.name}`;
-      document.getElementById('tt-due').textContent = fmtDate(p.due);
-      document.getElementById('tt-status').textContent = p.status;
-      document.getElementById('tt-assignee').textContent = p.assignee;
-      document.getElementById('tt-desc').textContent = p.desc;
-      tooltip.classList.add('visible');
-    });
-    bar.addEventListener('mousemove', (e) => {
-      tooltip.style.left = (e.clientX + 14) + 'px';
-      tooltip.style.top  = (e.clientY - 10) + 'px';
-    });
-    bar.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
-    tl.appendChild(bar);
-
-    // Milestone diamond
-    const ms = document.createElement('div');
-    ms.className = 'milestone';
-    ms.style.cssText = `
-      left: calc(${ep}% - 6px);
-      background: ${isBlocked ? '#ef4444' : color};
-    `;
-    tl.appendChild(ms);
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 16) + 'px';
+    tooltip.style.top  = (e.clientY - 10) + 'px';
   });
+  bar.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
+});
 </script>
 </body>
 </html>
