@@ -6,15 +6,12 @@
   <title>Roadmap Postventa — Eleva</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #f0f2f5;
       color: #1e293b;
       min-width: 960px;
     }
-
-    /* ─── HEADER ─── */
     .header {
       background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%);
       color: white;
@@ -25,417 +22,257 @@
     .header p  { color: #93c5fd; font-size: 0.85rem; margin-top: 4px; }
     .header-meta { text-align: right; font-size: 0.8rem; color: #93c5fd; }
     .header-meta strong { display: block; color: #fff; font-size: 1rem; }
+    .header-nav a {
+      color: #93c5fd; text-decoration: none; font-size: 0.82rem;
+      margin-left: 16px; padding: 6px 14px; border: 1px solid #3b82f6;
+      border-radius: 6px; transition: background 0.15s;
+    }
+    .header-nav a:hover { background: #1d4ed8; color: white; }
 
-    /* ─── KPI ROW ─── */
-    .kpi-row {
-      display: flex;
-      background: white;
-      border-bottom: 2px solid #e2e8f0;
-    }
-    .kpi {
-      flex: 1; padding: 16px 20px;
-      border-right: 1px solid #f1f5f9;
-      display: flex; align-items: center; gap: 12px;
-    }
+    .kpi-row { display: flex; background: white; border-bottom: 2px solid #e2e8f0; }
+    .kpi { flex: 1; padding: 16px 20px; border-right: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; }
     .kpi:last-child { border-right: none; }
     .kpi-icon { font-size: 1.5rem; }
     .kpi-val { font-size: 1.6rem; font-weight: 800; line-height: 1; }
     .kpi-lbl { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 2px; }
-    .c-blue   { color: #2563eb; }
-    .c-amber  { color: #d97706; }
-    .c-red    { color: #dc2626; }
-    .c-violet { color: #7c3aed; }
-    .c-green  { color: #059669; }
-    .c-slate  { color: #94a3b8; }
-    .c-cyan   { color: #0891b2; }
 
-    /* ─── CHART CONTAINER ─── */
-    .chart-wrap {
-      padding: 32px 48px;
+    .gantt-wrapper { padding: 24px 48px 0; }
+    .gantt-header { display: flex; margin-bottom: 4px; }
+    .gantt-label-head { width: 300px; min-width: 300px; }
+    .gantt-months { flex: 1; position: relative; height: 24px; }
+    .month-label {
+      position: absolute; font-size: 0.68rem; color: #64748b;
+      font-weight: 600; text-transform: uppercase; transform: translateX(-50%);
     }
 
-    /* ─── MONTH HEADER ─── */
-    .gantt-header {
-      display: flex;
-      margin-left: 260px;
-      border-bottom: 2px solid #cbd5e1;
-      margin-bottom: 4px;
+    .gantt-body { display: flex; flex-direction: column; gap: 2px; }
+    .gantt-row { display: flex; align-items: center; }
+    .gantt-label {
+      width: 300px; min-width: 300px;
+      padding: 6px 12px 6px 0;
+      display: flex; flex-direction: column; gap: 1px;
     }
-    .month-cell {
-      flex: 1;
-      text-align: center;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding-bottom: 6px;
-    }
+    .epic-key { font-size: 0.65rem; color: #94a3b8; font-weight: 700; font-family: monospace; }
+    .epic-name { font-size: 0.78rem; color: #1e293b; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 290px; }
 
-    /* ─── ROWS ─── */
-    .gantt-row {
-      display: flex;
-      align-items: center;
-      padding: 5px 0;
-      border-bottom: 1px solid #f1f5f9;
-      position: relative;
+    .gantt-track {
+      flex: 1; height: 32px; position: relative;
+      background: #f8fafc;
+      border-radius: 4px;
     }
-    .gantt-row:hover { background: #f8fafc; }
-
-    .row-label {
-      width: 260px;
-      min-width: 260px;
-      padding-right: 16px;
-    }
-    .row-key {
-      font-size: 0.68rem;
-      color: #94a3b8;
-      font-weight: 600;
-      font-family: monospace;
-    }
-    .row-name {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #1e293b;
-      line-height: 1.3;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 240px;
-    }
-    .row-assignee {
-      font-size: 0.68rem;
-      color: #64748b;
-      margin-top: 2px;
-    }
-
-    /* ─── GRID + BARS ─── */
-    .gantt-grid {
-      flex: 1;
-      position: relative;
-      height: 48px;
-    }
-    .grid-line {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 1px;
-      background: #e2e8f0;
-    }
-    .today-line {
-      position: absolute;
-      top: -8px; bottom: -8px;
-      width: 2px;
-      background: #ef4444;
-      z-index: 10;
-    }
-    .today-line::before {
-      content: 'Hoy';
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.65rem;
-      color: #ef4444;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
     .gantt-bar {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 28px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      padding: 0 8px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: white;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: pointer;
-      transition: opacity 0.15s, box-shadow 0.15s;
+      position: absolute; top: 4px; height: 24px;
+      border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; padding: 0 8px;
+      transition: filter 0.15s, transform 0.15s;
       min-width: 8px;
     }
-    .gantt-bar:hover { opacity: 0.88; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .gantt-bar:hover { filter: brightness(1.1); transform: scaleY(1.1); }
+    .bar-label { font-size: 0.65rem; color: white; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-    /* ─── STATUS COLORS ─── */
-    .s-en-curso       { background: #2563eb; }
-    .s-tareas         { background: #d97706; }
-    .s-backlog        { background: #7c3aed; }
-    .s-validacion     { background: #059669; }
-    .s-bloqueado      { background: #dc2626; }
-    .s-refinamiento   { background: #0891b2; }
-    .s-default        { background: #64748b; }
-
-    /* ─── LEGEND ─── */
-    .legend {
-      display: flex; flex-wrap: wrap; gap: 16px;
-      margin-bottom: 28px;
-      align-items: center;
+    .today-line {
+      position: absolute; top: 0; bottom: 0; width: 2px;
+      background: #ef4444; z-index: 10;
     }
-    .legend-title { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
-    .legend-item {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 0.75rem; color: #475569;
+    .today-line::after {
+      content: 'HOY';
+      position: absolute; top: -20px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.6rem; color: #ef4444; font-weight: 800;
+      white-space: nowrap;
     }
-    .legend-dot {
-      width: 12px; height: 12px; border-radius: 3px;
+    .month-line {
+      position: absolute; top: 0; bottom: 0; width: 1px;
+      background: #e2e8f0; pointer-events: none;
     }
 
-    /* ─── NO-DATE TABLE ─── */
-    .nodate-section {
-      padding: 0 48px 32px;
-    }
-    .nodate-title {
-      font-size: 0.85rem; font-weight: 700; color: #64748b;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      margin-bottom: 12px;
-    }
-    .nodate-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
-    .nodate-table th {
-      background: #f8fafc;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #64748b;
-      padding: 10px 16px;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .nodate-table td {
-      padding: 10px 16px;
-      font-size: 0.82rem;
-      border-bottom: 1px solid #f1f5f9;
-      color: #334155;
-    }
-    .nodate-table tr:last-child td { border-bottom: none; }
-
-    /* ─── TOOLTIP ─── */
-    #tooltip {
-      position: fixed;
-      background: #0f172a;
-      color: white;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      pointer-events: none;
-      z-index: 999;
-      max-width: 280px;
+    /* Tooltip */
+    .tooltip {
+      position: fixed; background: #0f172a; color: white;
+      padding: 10px 14px; border-radius: 8px; font-size: 0.78rem;
+      pointer-events: none; z-index: 1000;
+      max-width: 360px; line-height: 1.6;
       box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       display: none;
-      line-height: 1.6;
     }
-    #tooltip strong { display: block; font-size: 0.85rem; margin-bottom: 4px; color: #93c5fd; }
-    #tooltip .tip-row { color: #cbd5e1; }
-    #tooltip .tip-status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; margin-top: 4px; }
 
-    .footer {
-      text-align: center;
-      padding: 16px;
-      font-size: 0.72rem;
-      color: #94a3b8;
+    .nodate-section {
+      margin: 32px 48px 0;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     }
+    .nodate-title { font-size: 0.88rem; font-weight: 700; color: #92400e; margin-bottom: 12px; }
+    .nodate-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .nodate-table th { text-align: left; padding: 8px 12px; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; }
+    .nodate-table td { padding: 8px 12px; border-top: 1px solid #f1f5f9; }
+    .nodate-table code { font-size: 0.7rem; color: #7c3aed; background: #ede9fe; padding: 2px 6px; border-radius: 4px; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
+
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      padding: 16px 48px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #475569; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+    .footer { padding: 24px 48px; text-align: center; font-size: 0.72rem; color: #94a3b8; }
   </style>
 </head>
 <body>
 
 <div class="header">
   <div>
-    <h1>📅 Roadmap Postventa — Eleva</h1>
-    <p>Épicas del proyecto ELV con label Postventa · Fuente: Jira</p>
+    <h1>📅 Roadmap Postventa</h1>
+    <p>Grupo Kaufmann · División Tecnológica · Proyecto ELV</p>
   </div>
-  <div class="header-meta">
-    <strong id="today-label"></strong>
-    Actualizado automáticamente
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="header-nav">
+      <a href="index.html">← Inicio</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+    <div class="header-meta">
+      <strong>2026-03-17</strong>
+      Actualización automática desde Jira
+    </div>
   </div>
 </div>
 
-<div class="kpi-row" id="kpi-row"></div>
-
-<div class="chart-wrap">
-  <div class="legend">
-    <span class="legend-title">Estado</span>
-    <span class="legend-item"><span class="legend-dot s-en-curso"></span>En curso</span>
-    <span class="legend-item"><span class="legend-dot s-tareas"></span>Tareas por hacer</span>
-    <span class="legend-item"><span class="legend-dot s-backlog"></span>Backlog</span>
-    <span class="legend-item"><span class="legend-dot s-validacion"></span>Validación</span>
-    <span class="legend-item"><span class="legend-dot s-bloqueado"></span>Bloqueado</span>
-    <span class="legend-item"><span class="legend-dot s-refinamiento"></span>Refinamiento</span>
-  </div>
-
-  <div class="gantt-header" id="gantt-header"></div>
-  <div id="gantt-body"></div>
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-icon">📦</div><div><div class="kpi-val" style="color:#2563eb">15</div><div class="kpi-lbl">Épicas totales</div></div></div>
+  <div class="kpi"><div class="kpi-icon">📅</div><div><div class="kpi-val" style="color:#0891b2">13</div><div class="kpi-lbl">Con fecha</div></div></div>
+  <div class="kpi"><div class="kpi-icon">⏰</div><div><div class="kpi-val" style="color:#d97706">6</div><div class="kpi-lbl">Próximos 30 días</div></div></div>
+  <div class="kpi"><div class="kpi-icon">🚨</div><div><div class="kpi-val" style="color:#dc2626">1</div><div class="kpi-lbl">Bloqueadas</div></div></div>
+  <div class="kpi"><div class="kpi-icon">✅</div><div><div class="kpi-val" style="color:#059669">1</div><div class="kpi-lbl">En validación</div></div></div>
+  <div class="kpi"><div class="kpi-icon">❓</div><div><div class="kpi-val" style="color:#94a3b8">2</div><div class="kpi-lbl">Sin fecha</div></div></div>
 </div>
 
-<div class="nodate-section" id="nodate-section"></div>
+<div class="gantt-wrapper">
+  <div class="gantt-header">
+    <div class="gantt-label-head"></div>
+    <div class="gantt-months" id="months-container">
+      <div class="month-label" style="left:0.0%">Jan</div>
+<div class="month-label" style="left:14.692%">Feb</div>
+<div class="month-label" style="left:27.962%">Mar</div>
+<div class="month-label" style="left:42.654%">Apr</div>
+<div class="month-label" style="left:56.872%">May</div>
+<div class="month-label" style="left:71.564%">Jun</div>
+<div class="month-label" style="left:85.782%">Jul</div>
 
-<div class="footer">Eleva Postventa · Grupo Kaufmann · Datos extraídos de Jira en tiempo real</div>
+    </div>
+  </div>
+  <div class="gantt-body" id="gantt-body">
+    
+    <!-- tracks background (rendered once) -->
+  </div>
+</div>
 
-<div id="tooltip"></div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>En curso</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Por hacer</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Backlog</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#059669"></div>Validación</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Bloqueado</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#0891b2"></div>Refinamiento</div>
+</div>
+
+
+    <div class="nodate-section">
+      <h3 class="nodate-title">⚠️ Épicas sin fecha de entrega (2)</h3>
+      <table class="nodate-table">
+        <thead><tr><th>Clave</th><th>Épica</th><th>Estado</th><th>Responsable</th></tr></thead>
+        <tbody><tr>
+      <td><code>ELV-3521</code></td>
+      <td>Whatsapp Eleva incluye asesor</td>
+      <td><span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span></td>
+      <td>Andrea</td>
+    </tr><tr>
+      <td><code>ELV-3072</code></td>
+      <td>Incrementales Asistencia en Ruta</td>
+      <td><span class="badge" style="background:#fef3c7;color:#d97706">Por hacer</span></td>
+      <td>Andrea</td>
+    </tr></tbody>
+      </table>
+    </div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div class="footer">Eleva Postventa · Grupo Kaufmann · 2026-03-17 · Datos en tiempo real desde Jira ELV</div>
 
 <script>
-const EPICS = [
-  { key:"ELV-3033", summary:"Perfil de cliente", status:"Validacion", start:"2026-01-01", end:"2026-03-20", assignee:"Fernando Chazarreta" },
-  { key:"ELV-3456", summary:"Métricas de usabilidad Eleva", status:"Backlog", start:"2026-03-14", end:"2026-03-21", assignee:"Andrea" },
-  { key:"ELV-3454", summary:"Información de Garantía General y Extendida", status:"Tareas por hacer", start:"2026-03-22", end:"2026-03-28", assignee:"Andrea" },
-  { key:"ELV-2965", summary:"Pautas de Mantenimiento (Perú)", status:"Bloqueado 🚨", start:"2026-03-19", end:"2026-03-29", assignee:"Andrea" },
-  { key:"ELV-2913", summary:"Refactor: Mis Ventas", status:"Backlog", start:"2026-03-24", end:"2026-04-06", assignee:"Mauricio Etchevest" },
-  { key:"ELV-3122", summary:"Home Eleva", status:"Tareas por hacer", start:"2026-03-13", end:"2026-04-15", assignee:"Victor Asencio" },
-  { key:"ELV-3491", summary:"Filtros Ofertas Originales vs Alternativos", status:"Backlog", start:"2026-04-12", end:"2026-04-18", assignee:"Andrea" },
-  { key:"ELV-2759", summary:"Selling Speech 2.0", status:"Tareas por hacer", start:"2026-04-01", end:"2026-04-30", assignee:"Andrea" },
-  { key:"ELV-3124", summary:"Portal Smart — Indicadores por Sucursal", status:"Backlog", start:"2026-04-01", end:"2026-05-31", assignee:"Andrea" },
-  { key:"ELV-3321", summary:"KPI Paso Vehicular", status:"Backlog", start:"2026-05-18", end:"2026-05-31", assignee:"Andrea" },
-  { key:"ELV-3319", summary:"Semáforo de Productos", status:"Listo para refinamiento", start:"2026-06-01", end:"2026-06-14", assignee:"Andrea" },
-  { key:"ELV-3156", summary:"Incrementales Agenda", status:"Backlog", start:"2026-06-01", end:"2026-06-14", assignee:"Andrea" },
-  { key:"ELV-2912", summary:"Refactor: Mis Cotizaciones", status:"Backlog", start:"2026-06-12", end:"2026-06-25", assignee:"Mauricio Etchevest" },
-];
+const RANGE_START = new Date('2026-01-01');
+const RANGE_END   = new Date('2026-07-31');
+const TOTAL_DAYS  = (RANGE_END - RANGE_START) / 86400000;
+const TODAY_STR   = '2026-03-17';
 
-const NODATE = [
-  { key:"ELV-3521", summary:"Whatsapp Eleva incluye asesor", status:"Backlog", assignee:"Andrea" },
-  { key:"ELV-3072", summary:"Incrementales Asistencia en Ruta", status:"Tareas por hacer", assignee:"Andrea" },
-];
-
-const STATUS_CLASS = {
-  "en curso":               "s-en-curso",
-  "tareas por hacer":       "s-tareas",
-  "backlog":                "s-backlog",
-  "validacion":             "s-validacion",
-  "validación":             "s-validacion",
-  "bloqueado":              "s-bloqueado",
-  "bloqueado 🚨":           "s-bloqueado",
-  "listo para refinamiento":"s-refinamiento",
-  "refinamiento":           "s-refinamiento",
-};
-
-function statusClass(s){ return STATUS_CLASS[s.toLowerCase()] || "s-default"; }
-
-const TODAY = new Date(); TODAY.setHours(0,0,0,0);
-const fmtDate = d => d ? new Date(d).toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-
-// ── TIMELINE: Jan–Jul 2026
-const TL_START = new Date('2026-01-01');
-const TL_END   = new Date('2026-07-01');
-const TL_DAYS  = (TL_END - TL_START) / 86400000;
-
-function pct(dateStr){
-  const d = new Date(dateStr); d.setHours(0,0,0,0);
-  return Math.max(0, Math.min(100, (d - TL_START) / (TL_END - TL_START) * 100));
+function pct(dStr) {
+  const d = new Date(dStr);
+  const clamped = new Date(Math.max(RANGE_START, Math.min(RANGE_END, d)));
+  return (clamped - RANGE_START) / 86400000 / TOTAL_DAYS * 100;
 }
 
-// ── KPIs
-const today30 = new Date(TODAY); today30.setDate(today30.getDate()+30);
-const kpiTotal    = EPICS.length + NODATE.length;
-const kpiConFecha = EPICS.length;
-const kpiProx30   = EPICS.filter(e => { const d=new Date(e.end); return d >= TODAY && d <= today30; }).length;
-const kpiBloq     = EPICS.filter(e => e.status.toLowerCase().includes('bloqueado')).length + NODATE.filter(e=>e.status.toLowerCase().includes('bloqueado')).length;
-const kpiValid    = EPICS.filter(e => e.status.toLowerCase().includes('validaci')).length;
-const kpiSinFecha = NODATE.length;
+const todayPct = pct(TODAY_STR);
 
-document.getElementById('today-label').textContent = TODAY.toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const EPICS = [{"key": "ELV-3033", "summary": "Perfil de cliente", "status": "Validacion", "duedate": "2026-03-20", "startdate": "2026-01-01", "assignee": "Fernando Chazarreta"}, {"key": "ELV-3456", "summary": "Métricas de usabilidad Eleva", "status": "Backlog", "duedate": "2026-03-21", "startdate": "2026-03-14", "assignee": "Andrea"}, {"key": "ELV-3454", "summary": "Información de Garantía General y Garantía Extendida Cliente", "status": "Tareas por hacer", "duedate": "2026-03-28", "startdate": "2026-03-22", "assignee": "Andrea"}, {"key": "ELV-2965", "summary": "Visualización de Pautas de Mantenimiento en Eleva Perú", "status": "Bloqueado", "duedate": "2026-03-29", "startdate": "2026-03-19", "assignee": "Andrea"}, {"key": "ELV-2913", "summary": "Refactor: Mis Ventas Eleva", "status": "Backlog", "duedate": "2026-04-06", "startdate": "2026-03-24", "assignee": "Mauricio Etchevest"}, {"key": "ELV-3122", "summary": "Home Eleva", "status": "Tareas por hacer", "duedate": "2026-04-15", "startdate": "2026-03-13", "assignee": "Victor Asencio"}, {"key": "ELV-3491", "summary": "Filtros para Ofertas de Servicio Originales vs Alternativos en Eleva", "status": "Backlog", "duedate": "2026-04-18", "startdate": "2026-04-12", "assignee": "Andrea"}, {"key": "ELV-2759", "summary": "Eleva: Selling Speech 2.0", "status": "Tareas por hacer", "duedate": "2026-04-30", "startdate": "2026-04-01", "assignee": "Andrea"}, {"key": "ELV-3321", "summary": "KPI paso vehicular", "status": "Backlog", "duedate": "2026-05-31", "startdate": "2026-05-18", "assignee": "Andrea"}, {"key": "ELV-3124", "summary": "Portal Smart Postventa — Indicadores por Sucursal (NPS, Metas, Permanencia)", "status": "Backlog", "duedate": "2026-05-31", "startdate": "2026-04-01", "assignee": "Andrea"}, {"key": "ELV-3319", "summary": "Semáforo de productos", "status": "Listo para refinamiento", "duedate": "2026-06-14", "startdate": "2026-06-01", "assignee": "Andrea"}, {"key": "ELV-3156", "summary": "Incrementales Agenda", "status": "Backlog", "duedate": "2026-06-14", "startdate": "2026-06-01", "assignee": "Andrea"}, {"key": "ELV-2912", "summary": "Refactor: Mis Cotizaciones Eleva", "status": "Backlog", "duedate": "2026-06-25", "startdate": "2026-06-12", "assignee": "Mauricio Etchevest"}];
 
-document.getElementById('kpi-row').innerHTML = `
-  <div class="kpi"><span class="kpi-icon">📊</span><div><div class="kpi-val c-blue">${kpiTotal}</div><div class="kpi-lbl">Total épicas</div></div></div>
-  <div class="kpi"><span class="kpi-icon">📅</span><div><div class="kpi-val c-violet">${kpiConFecha}</div><div class="kpi-lbl">Con fecha</div></div></div>
-  <div class="kpi"><span class="kpi-icon">⚡</span><div><div class="kpi-val c-amber">${kpiProx30}</div><div class="kpi-lbl">Próximos 30 días</div></div></div>
-  <div class="kpi"><span class="kpi-icon">🚨</span><div><div class="kpi-val c-red">${kpiBloq}</div><div class="kpi-lbl">Bloqueados</div></div></div>
-  <div class="kpi"><span class="kpi-icon">✅</span><div><div class="kpi-val c-green">${kpiValid}</div><div class="kpi-lbl">En validación</div></div></div>
-  <div class="kpi"><span class="kpi-icon">❓</span><div><div class="kpi-val c-slate">${kpiSinFecha}</div><div class="kpi-lbl">Sin fecha</div></div></div>
-`;
+const STATUS_COLORS = {"En curso": "#2563eb", "Validacion": "#059669", "Tareas por hacer": "#d97706", "Backlog": "#7c3aed", "Bloqueado": "#dc2626", "Listo para refinamiento": "#0891b2"};
+const STATUS_LABELS = {"Validacion": "Validación", "Tareas por hacer": "Por hacer", "Bloqueado": "Bloqueado", "Backlog": "Backlog", "En curso": "En curso", "Listo para refinamiento": "Refinamiento"};
 
-// ── MONTH HEADERS
-const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul'];
-const headerEl = document.getElementById('gantt-header');
-months.forEach(m => {
-  const el = document.createElement('div');
-  el.className = 'month-cell';
-  el.textContent = m + ' 2026';
-  headerEl.appendChild(el);
-});
-
-// ── GANTT ROWS
 const body = document.getElementById('gantt-body');
-const todayPct = pct(TODAY.toISOString().slice(0,10));
 
-EPICS.forEach((epic, i) => {
+EPICS.forEach(e => {
+  const sPct  = pct(e.startdate);
+  const ePct  = pct(e.duedate);
+  const width = Math.max(0.5, ePct - sPct);
+  const color = STATUS_COLORS[e.status] || '#64748b';
+  const lbl   = STATUS_LABELS[e.status]  || e.status;
+  const firstName = e.assignee.split(' ')[0];
+
   const row = document.createElement('div');
   row.className = 'gantt-row';
-
-  const startPct = pct(epic.start);
-  const endPct   = pct(epic.end);
-  const widthPct = Math.max(0.5, endPct - startPct);
-  const sc = statusClass(epic.status);
-
   row.innerHTML = `
-    <div class="row-label">
-      <div class="row-key">${epic.key}</div>
-      <div class="row-name" title="${epic.summary}">${epic.summary}</div>
-      <div class="row-assignee">👤 ${epic.assignee}</div>
+    <div class="gantt-label" title="${e.key}: ${e.summary}">
+      <span class="epic-key">${e.key}</span>
+      <span class="epic-name">${e.summary}</span>
     </div>
-    <div class="gantt-grid" id="grid-${i}">
-      ${months.map((_,mi) => `<div class="grid-line" style="left:${mi/7*100}%"></div>`).join('')}
-      ${i===0 ? `<div class="today-line" style="left:${todayPct}%"></div>` : `<div class="today-line" style="left:${todayPct}%;top:0;bottom:0;position:absolute;width:2px;background:#ef4444;z-index:10;"></div>`}
-      <div class="gantt-bar ${sc}"
-           style="left:${startPct}%;width:${widthPct}%;"
-           data-key="${epic.key}"
-           data-summary="${epic.summary}"
-           data-status="${epic.status}"
-           data-start="${epic.start}"
-           data-end="${epic.end}"
-           data-assignee="${epic.assignee}"
-      >${widthPct > 6 ? epic.summary : ''}</div>
-    </div>
-  `;
+    <div class="gantt-track" style="position:relative">
+      <div class="month-lines-bg"></div>
+      <div class="today-marker" style="position:absolute;top:0;bottom:0;left:${todayPct}%;width:2px;background:#ef4444;z-index:10;"></div>
+      <div class="gantt-bar" style="left:${sPct}%;width:${width}%;background:${color};"
+           data-key="${e.key}" data-summary="${e.summary}" data-start="${e.startdate}"
+           data-end="${e.duedate}" data-status="${lbl}" data-assignee="${e.assignee}">
+        <span class="bar-label">${firstName}</span>
+      </div>
+    </div>`;
   body.appendChild(row);
 });
 
-// ── NO-DATE TABLE
-const nodateSection = document.getElementById('nodate-section');
-if(NODATE.length > 0){
-  nodateSection.innerHTML = `
-    <div class="nodate-title">⚠️ Épicas sin fecha de entrega (${NODATE.length})</div>
-    <table class="nodate-table">
-      <thead><tr><th>Clave</th><th>Nombre</th><th>Estado</th><th>Responsable</th></tr></thead>
-      <tbody>
-        ${NODATE.map(e => `
-          <tr>
-            <td><code style="font-size:0.78rem;color:#7c3aed;">${e.key}</code></td>
-            <td>${e.summary}</td>
-            <td><span style="padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;color:white;" class="${statusClass(e.status)}">${e.status}</span></td>
-            <td>${e.assignee}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  `;
-}
+// Month lines in each track
+document.querySelectorAll('.gantt-track').forEach(track => {
+  ["2026-01-01", "2026-02-01", "2026-03-01", "2026-04-01", "2026-05-01", "2026-06-01", "2026-07-01"].forEach(mStr => {
+    const line = document.createElement('div');
+    line.className = 'month-line';
+    line.style.left = pct(mStr) + '%';
+    track.insertBefore(line, track.firstChild);
+  });
+});
 
-// ── TOOLTIP
+// Tooltip
 const tooltip = document.getElementById('tooltip');
 document.querySelectorAll('.gantt-bar').forEach(bar => {
-  bar.addEventListener('mousemove', e => {
-    const sc = statusClass(bar.dataset.status);
-    tooltip.innerHTML = `
-      <strong>${bar.dataset.key} · ${bar.dataset.summary}</strong>
-      <div class="tip-row">📅 Inicio: ${fmtDate(bar.dataset.start)}</div>
-      <div class="tip-row">🏁 Fin: ${fmtDate(bar.dataset.end)}</div>
-      <div class="tip-row">👤 ${bar.dataset.assignee}</div>
-      <span class="tip-status ${sc}">${bar.dataset.status}</span>
-    `;
+  bar.addEventListener('mouseenter', (ev) => {
+    const d = bar.dataset;
+    const start = new Date(d.start + 'T00:00:00').toLocaleDateString('es-CL', {day:'numeric',month:'short',year:'numeric'});
+    const end   = new Date(d.end   + 'T00:00:00').toLocaleDateString('es-CL', {day:'numeric',month:'short',year:'numeric'});
+    tooltip.innerHTML = `<strong>${d.key}</strong><br>${d.summary}<br><br>📅 ${start} → ${end}<br>🏷️ ${d.status}<br>👤 ${d.assignee}`;
     tooltip.style.display = 'block';
-    tooltip.style.left = (e.clientX + 16) + 'px';
-    tooltip.style.top  = (e.clientY - 10) + 'px';
   });
-  bar.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
+  bar.addEventListener('mousemove', (ev) => {
+    tooltip.style.left = (ev.clientX + 14) + 'px';
+    tooltip.style.top  = (ev.clientY - 10) + 'px';
+  });
+  bar.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
 });
 </script>
 </body>
