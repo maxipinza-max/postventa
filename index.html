@@ -3,89 +3,91 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Eleva Postventa — Inicio</title>
+  <title>Postventa Eleva — Portal</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; flex-direction: column; }
-    .header { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%); color: white; padding: 40px 48px 48px; text-align: center; }
-    .header-logo { font-size: 2.8rem; margin-bottom: 10px; }
-    .header h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
-    .header p { color: #93c5fd; font-size: 1rem; max-width: 500px; margin: 0 auto; line-height: 1.6; }
-    .update-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #bfdbfe; padding: 6px 16px; border-radius: 999px; font-size: 0.78rem; margin-top: 16px; }
-    .update-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.3); } }
-    .cards-section { flex: 1; padding: 48px; display: flex; flex-direction: column; align-items: center; gap: 32px; }
-    .cards-row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; max-width: 860px; width: 100%; }
-    .nav-card { flex: 1; min-width: 280px; max-width: 400px; background: white; border-radius: 20px; padding: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-decoration: none; color: #1e293b; display: flex; flex-direction: column; gap: 14px; transition: box-shadow 0.2s, transform 0.2s; border: 2px solid transparent; position: relative; overflow: hidden; }
-    .nav-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; border-radius: 20px 20px 0 0; }
-    .nav-card.card-dashboard::before { background: linear-gradient(90deg, #7c3aed, #2563eb); }
-    .nav-card.card-roadmap::before   { background: linear-gradient(90deg, #2563eb, #0891b2); }
-    .nav-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,0.14); transform: translateY(-4px); }
-    .nav-card:hover.card-dashboard { border-color: #7c3aed22; }
-    .nav-card:hover.card-roadmap   { border-color: #2563eb22; }
-    .card-icon { font-size: 2.6rem; }
-    .card-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; }
-    .card-desc { font-size: 0.85rem; color: #64748b; line-height: 1.6; }
-    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-    .tag { padding: 3px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
-    .tag-purple { background: #f3e8ff; color: #7c3aed; }
-    .tag-blue   { background: #dbeafe; color: #2563eb; }
-    .tag-cyan   { background: #cffafe; color: #0891b2; }
-    .card-arrow { font-size: 1.4rem; margin-top: auto; color: #94a3b8; text-align: right; }
-    .stats-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; max-width: 860px; width: 100%; }
-    .stat-chip { background: white; border-radius: 12px; padding: 14px 20px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.07); min-width: 130px; }
-    .stat-val { font-size: 1.8rem; font-weight: 800; line-height: 1; }
-    .stat-lbl { font-size: 0.68rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 4px; }
-    .footer { text-align: center; padding: 16px; font-size: 0.72rem; color: #94a3b8; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #1d4ed8 100%);
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: white;
+    }
+    .brand { font-size: 0.82rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #93c5fd; margin-bottom: 8px; }
+    h1 { font-size: 2.4rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; }
+    .subtitle { color: #93c5fd; font-size: 0.95rem; margin-bottom: 48px; }
+    .cards { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+    .nav-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px; padding: 32px 40px;
+      text-decoration: none; color: white;
+      width: 260px; text-align: center;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      backdrop-filter: blur(6px);
+    }
+    .nav-card:hover {
+      background: rgba(255,255,255,0.14);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+    .nav-card-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+    .nav-card-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
+    .nav-card-desc { font-size: 0.78rem; color: #bfdbfe; line-height: 1.5; }
+    .nav-card-arrow { display: block; margin-top: 20px; font-size: 1.2rem; opacity: 0.5; transition: opacity 0.15s, transform 0.15s; }
+    .nav-card:hover .nav-card-arrow { opacity: 1; transform: translateX(4px); }
+    .footer { margin-top: 56px; font-size: 0.72rem; color: #475569; text-align: center; }
+    .footer strong { color: #64748b; }
+    .badge-auto {
+      display: inline-block; background: #10b981; color: white;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; padding: 3px 10px; border-radius: 999px; margin-top: 6px;
+    }
+    .stats-row {
+      display: flex; gap: 32px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center;
+    }
+    .stat { text-align: center; }
+    .stat-val { font-size: 2rem; font-weight: 900; line-height: 1; }
+    .stat-lbl { font-size: 0.7rem; color: #93c5fd; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
   </style>
 </head>
 <body>
-<div class="header">
-  <div class="header-logo">🚗</div>
-  <h1>Eleva Postventa</h1>
-  <p>Panel central de seguimiento del roadmap y proyectos de la división Postventa de Grupo Kaufmann</p>
-  <div class="update-badge">
-    <div class="update-dot"></div>
-    <span>Última actualización: 2026-03-17</span>
-  </div>
+
+<div class="brand">Grupo Kaufmann · División Tecnología</div>
+<h1>🚗 Eleva Postventa</h1>
+<p class="subtitle">Portal de seguimiento del roadmap y estado de épicas</p>
+
+<div class="stats-row">
+  <div class="stat"><div class="stat-val">15</div><div class="stat-lbl">Épicas totales</div></div>
+  <div class="stat"><div class="stat-val">1</div><div class="stat-lbl">En validación</div></div>
+  <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Próx. 30 días</div></div>
+  <div class="stat"><div class="stat-val">2</div><div class="stat-lbl">Sin fecha</div></div>
 </div>
 
-<div class="cards-section">
-  <div class="stats-row">
-    <div class="stat-chip"><div class="stat-val" style="color:#2563eb">15</div><div class="stat-lbl">Épicas totales</div></div>
-    <div class="stat-chip"><div class="stat-val" style="color:#d97706">4</div><div class="stat-lbl">Por hacer</div></div>
-    <div class="stat-chip"><div class="stat-val" style="color:#7c3aed">9</div><div class="stat-lbl">Backlog</div></div>
-    <div class="stat-chip"><div class="stat-val" style="color:#059669">1</div><div class="stat-lbl">En validación</div></div>
-    <div class="stat-chip"><div class="stat-val" style="color:#dc2626">1</div><div class="stat-lbl">Bloqueadas</div></div>
-    <div class="stat-chip"><div class="stat-val" style="color:#94a3b8">2</div><div class="stat-lbl">Sin fecha</div></div>
-  </div>
-
-  <div class="cards-row">
-    <a href="dashboard.html" class="nav-card card-dashboard">
-      <div class="card-icon">📋</div>
-      <div class="card-title">Dashboard de Épicas</div>
-      <div class="card-desc">Vista en grid de todas las épicas con sus estados, responsables, fechas y descripciones. Incluye filtros por estado y búsqueda libre.</div>
-      <div class="card-tags">
-        <span class="tag tag-purple">Tarjetas</span>
-        <span class="tag tag-purple">Filtros</span>
-        <span class="tag tag-purple">KPIs</span>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-    <a href="roadmap.html" class="nav-card card-roadmap">
-      <div class="card-icon">📅</div>
-      <div class="card-title">Roadmap Gantt</div>
-      <div class="card-desc">Visualización temporal de las épicas en formato Gantt horizontal. Muestra inicio, fin, estado y quién está a cargo de cada entrega.</div>
-      <div class="card-tags">
-        <span class="tag tag-blue">Gantt</span>
-        <span class="tag tag-cyan">Línea de tiempo</span>
-        <span class="tag tag-blue">Tooltips</span>
-      </div>
-      <div class="card-arrow">→</div>
-    </a>
-  </div>
+<div class="cards">
+  <a href="dashboard.html" class="nav-card">
+    <span class="nav-card-icon">📋</span>
+    <div class="nav-card-title">Dashboard</div>
+    <div class="nav-card-desc">Tarjetas de épicas con estado, responsable, fecha de entrega y filtros interactivos.</div>
+    <span class="nav-card-arrow">→</span>
+  </a>
+  <a href="roadmap.html" class="nav-card">
+    <span class="nav-card-icon">📅</span>
+    <div class="nav-card-title">Roadmap</div>
+    <div class="nav-card-desc">Gantt visual Ene–Jul 2026 con línea de hoy, KPIs y tooltips de cada épica.</div>
+    <span class="nav-card-arrow">→</span>
+  </a>
 </div>
 
-<div class="footer">Eleva Postventa · Grupo Kaufmann · Actualización automática desde Jira · 2026-03-17</div>
+<div class="footer">
+  <div>Datos sincronizados desde <strong>Jira · Proyecto ELV · Label: Postventa</strong></div>
+  <div style="margin-top:4px">Última actualización: <strong id="update-date"></strong></div>
+  <div style="margin-top:6px"><span class="badge-auto">⚡ Actualización automática diaria</span></div>
+</div>
+
+<script>
+  document.getElementById('update-date').textContent =
+    new Date('2026-03-18').toLocaleDateString('es-CL', {day:'2-digit', month:'long', year:'numeric'});
+</script>
 </body>
 </html>

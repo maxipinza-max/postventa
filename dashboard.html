@@ -48,23 +48,38 @@
 
     .grid { padding: 0 48px 48px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 
-    .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: box-shadow 0.2s, transform 0.2s; }
-    .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(-2px); }
-    .card.hidden { display: none; }
+    .card {
+      background: white; border-radius: 12px; padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+      transition: box-shadow 0.15s, transform 0.1s;
+      display: flex; flex-direction: column; gap: 10px;
+      border-top: 4px solid var(--status-color, #94a3b8);
+    }
+    .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1); transform: translateY(-2px); }
 
-    .card-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; }
-    .card-key { font-size: 0.7rem; font-family: monospace; font-weight: 700; color: #475569; }
-    .badge { padding: 3px 10px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .card-key a {
+      font-size: 0.72rem; font-weight: 800; color: #1d4ed8;
+      text-decoration: none; letter-spacing: 0.3px;
+    }
+    .card-key a:hover { text-decoration: underline; }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font-size: 0.64rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.4px; white-space: nowrap;
+    }
+    .card-title { font-weight: 700; font-size: 0.9rem; line-height: 1.35; color: #0f172a; }
+    .card-desc {
+      font-size: 0.76rem; color: #475569; line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-meta { display: flex; flex-direction: column; gap: 4px; margin-top: auto; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+    .card-meta-row { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #64748b; }
+    .card-meta-row span { color: #1e293b; font-weight: 600; }
 
-    .card-body { padding: 14px; }
-    .card-title { font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; line-height: 1.4; }
-    .card-desc { font-size: 0.78rem; color: #64748b; line-height: 1.55; margin-bottom: 12px; }
-    .card-meta { border-top: 1px solid #f1f5f9; padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
-    .meta-row { font-size: 0.75rem; color: #475569; }
-
-    .no-results { grid-column: 1/-1; text-align: center; padding: 48px; color: #94a3b8; font-size: 0.9rem; }
-
-    .footer { text-align: center; padding: 16px; font-size: 0.72rem; color: #94a3b8; }
+    .empty-msg { grid-column: 1 / -1; text-align: center; padding: 60px; color: #94a3b8; font-size: 1rem; }
+    .results-count { font-size: 0.75rem; color: #64748b; padding: 0 48px 8px; }
   </style>
 </head>
 <body>
@@ -72,295 +87,146 @@
 <div class="header">
   <div>
     <h1>📋 Dashboard Postventa</h1>
-    <p>Grupo Kaufmann · División Tecnológica · Proyecto ELV</p>
+    <p>Épicas Jira · Proyecto ELV · Label: Postventa</p>
   </div>
-  <div style="display:flex; align-items:center; gap:16px;">
+  <div style="display:flex;align-items:center;gap:16px;">
     <div class="header-nav">
       <a href="index.html">← Inicio</a>
-      <a href="roadmap.html">Roadmap</a>
+      <a href="roadmap.html">📅 Roadmap</a>
     </div>
     <div class="header-meta">
-      <strong>2026-03-17</strong>
-      Actualización automática desde Jira
+      <strong id="update-date"></strong>
+      Última actualización
     </div>
   </div>
 </div>
 
-<div class="kpi-row">
-  <div class="kpi"><div class="kpi-icon">📦</div><div><div class="kpi-val" style="color:#2563eb">15</div><div class="kpi-lbl">Épicas totales</div></div></div>
-  <div class="kpi"><div class="kpi-icon">🔵</div><div><div class="kpi-val" style="color:#2563eb">0</div><div class="kpi-lbl">En curso</div></div></div>
-  <div class="kpi"><div class="kpi-icon">🟡</div><div><div class="kpi-val" style="color:#d97706">4</div><div class="kpi-lbl">Por hacer</div></div></div>
-  <div class="kpi"><div class="kpi-icon">🟣</div><div><div class="kpi-val" style="color:#7c3aed">9</div><div class="kpi-lbl">Backlog / Refin.</div></div></div>
-  <div class="kpi"><div class="kpi-icon">✅</div><div><div class="kpi-val" style="color:#059669">1</div><div class="kpi-lbl">Validación</div></div></div>
-  <div class="kpi"><div class="kpi-icon">🚨</div><div><div class="kpi-val" style="color:#dc2626">1</div><div class="kpi-lbl">Bloqueadas</div></div></div>
-  <div class="kpi"><div class="kpi-icon">❓</div><div><div class="kpi-val" style="color:#94a3b8">2</div><div class="kpi-lbl">Sin fecha</div></div></div>
+<div class="kpi-row" id="kpi-row"></div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="Validacion">✅ Validación</button>
+  <button class="filter-btn" data-filter="En curso">🔵 En curso</button>
+  <button class="filter-btn" data-filter="Tareas por hacer">🟡 Por hacer</button>
+  <button class="filter-btn" data-filter="Backlog">🟣 Backlog</button>
+  <button class="filter-btn" data-filter="Listo para refinamiento">🔵 Refinamiento</button>
+  <button class="filter-btn" data-filter="Bloqueado">🔴 Bloqueado</button>
+  <input class="search-input" id="search" type="text" placeholder="🔍 Buscar épica..."/>
 </div>
 
-<div class="filters">
-  <button class="filter-btn active" data-filter="all">Todas (15)</button>
-  <button class="filter-btn" data-filter="En curso">En curso (0)</button>
-  <button class="filter-btn" data-filter="Tareas por hacer">Por hacer (4)</button>
-  <button class="filter-btn" data-filter="Backlog">Backlog (8)</button>
-  <button class="filter-btn" data-filter="Validacion">Validación (1)</button>
-  <button class="filter-btn" data-filter="Bloqueado">Bloqueado (1)</button>
-  <button class="filter-btn" data-filter="Listo para refinamiento">Refinamiento (1)</button>
-  <input class="search-input" type="text" placeholder="🔍 Buscar épica..." id="search" />
-</div>
-
-<div class="grid" id="cards-grid">
-  
-    <div class="card" data-status="Validacion">
-      <div class="card-top" style="background:#05966920; border-left: 4px solid #059669">
-        <div class="card-key">ELV-3033</div>
-        <span class="badge" style="background:#d1fae5;color:#059669">Validación</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Perfil de cliente</div>
-        <div class="card-desc">Centralizar información 360° del cliente (vehículos, historial OT, contactabilidad) con resumen IA en el módulo de venta digital.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Fernando Chazarreta</strong></div>
-          <div class="meta-row">📅 Inicio: 1 Jan 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#059669">20 Mar 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-3456</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Métricas de usabilidad Eleva</div>
-        <div class="card-desc">Métricas de frecuencia de ingreso y uso por sección de Eleva a nivel de asesor, sucursal y país.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 14 Mar 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">21 Mar 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Tareas por hacer">
-      <div class="card-top" style="background:#d9770620; border-left: 4px solid #d97706">
-        <div class="card-key">ELV-3454</div>
-        <span class="badge" style="background:#fef3c7;color:#d97706">Por hacer</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Información de Garantía General y Garantía Extendida Cliente</div>
-        <div class="card-desc">Indicador visual tipo semáforo en Venta Digital para mostrar si el cliente ya tiene Garantía General o Extendida vigente.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 22 Mar 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#d97706">28 Mar 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Bloqueado">
-      <div class="card-top" style="background:#dc262620; border-left: 4px solid #dc2626">
-        <div class="card-key">ELV-2965</div>
-        <span class="badge" style="background:#fee2e2;color:#dc2626">Bloqueado</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Visualización de Pautas de Mantenimiento en Eleva Perú</div>
-        <div class="card-desc">Habilitar consulta de pautas de mantenimiento de vehículos (por km / tiempo / fabricante) para asesores de servicio en Perú.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 19 Mar 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#dc2626">29 Mar 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-2913</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Refactor: Mis Ventas Eleva</div>
-        <div class="card-desc">Rediseño del módulo Mis Ventas: solapas digitales/manuales, descarga Excel, campo Categoría y filtros de encabezado.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Mauricio Etchevest</strong></div>
-          <div class="meta-row">📅 Inicio: 24 Mar 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">6 Apr 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Tareas por hacer">
-      <div class="card-top" style="background:#d9770620; border-left: 4px solid #d97706">
-        <div class="card-key">ELV-3122</div>
-        <span class="badge" style="background:#fef3c7;color:#d97706">Por hacer</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Home Eleva</div>
-        <div class="card-desc">Nuevo Home con dashboards personalizados por perfil: agenda, oportunidades, KPIs de NPS, permanencia y meta facturación.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Victor Asencio</strong></div>
-          <div class="meta-row">📅 Inicio: 13 Mar 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#d97706">15 Apr 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-3491</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Filtros para Ofertas de Servicio Originales vs Alternativos en Eleva</div>
-        <div class="card-desc">Filtros en el módulo de ofertas de servicio para distinguir repuestos originales vs. alternativos.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 12 Apr 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">18 Apr 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Tareas por hacer">
-      <div class="card-top" style="background:#d9770620; border-left: 4px solid #d97706">
-        <div class="card-key">ELV-2759</div>
-        <span class="badge" style="background:#fef3c7;color:#d97706">Por hacer</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Eleva: Selling Speech 2.0</div>
-        <div class="card-desc">Acceso a OT históricas y abiertas de un vehículo para enriquecer cotizaciones en el flujo de Selling Speech.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 1 Apr 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#d97706">30 Apr 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-3321</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">KPI paso vehicular</div>
-        <div class="card-desc">KPI de porcentaje de cotizaciones realizadas vs. clientes que ingresan a la sucursal (paso vehicular).</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 18 May 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">31 May 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-3124</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Portal Smart Postventa — Indicadores por Sucursal (NPS, Metas, Permanencia)</div>
-        <div class="card-desc">Dashboard de indicadores de NPS, cumplimiento de metas y permanencia por sucursal en Portal Smart Postventa.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 1 Apr 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">31 May 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Listo para refinamiento">
-      <div class="card-top" style="background:#0891b220; border-left: 4px solid #0891b2">
-        <div class="card-key">ELV-3319</div>
-        <span class="badge" style="background:#cffafe;color:#0891b2">Refinamiento</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Semáforo de productos</div>
-        <div class="card-desc">Vista de productos y servicios NO contratados por vehículo para anticipar cotizaciones efectivas.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 1 Jun 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#0891b2">14 Jun 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-3156</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Incrementales Agenda</div>
-        <div class="card-desc">Mejoras en Agenda: anulación de reservas y agendamiento para terceros por perfil call center.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: 1 Jun 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">14 Jun 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-2912</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Refactor: Mis Cotizaciones Eleva</div>
-        <div class="card-desc">Rediseño del módulo Mis Cotizaciones: todos los productos, reenvío por WhatsApp, filtros y nuevos campos.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Mauricio Etchevest</strong></div>
-          <div class="meta-row">📅 Inicio: 12 Jun 2026</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">25 Jun 2026</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Backlog">
-      <div class="card-top" style="background:#7c3aed20; border-left: 4px solid #7c3aed">
-        <div class="card-key">ELV-3521</div>
-        <span class="badge" style="background:#ede9fe;color:#7c3aed">Backlog</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Whatsapp Eleva incluye asesor</div>
-        <div class="card-desc">Incorporar datos del asesor en los mensajes y cotizaciones enviadas por WhatsApp desde Eleva.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: —</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#7c3aed">—</strong></div>
-        </div>
-      </div>
-    </div>
-    <div class="card" data-status="Tareas por hacer">
-      <div class="card-top" style="background:#d9770620; border-left: 4px solid #d97706">
-        <div class="card-key">ELV-3072</div>
-        <span class="badge" style="background:#fef3c7;color:#d97706">Por hacer</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">Incrementales Asistencia en Ruta</div>
-        <div class="card-desc">Excluir marca Smart de asistencia en ruta y agregar el producto al flujo de pago de Myservice.</div>
-        <div class="card-meta">
-          <div class="meta-row">👤 <strong>Andrea</strong></div>
-          <div class="meta-row">📅 Inicio: —</div>
-          <div class="meta-row">🏁 Entrega: <strong style="color:#d97706">—</strong></div>
-        </div>
-      </div>
-    </div>
-</div>
-
-<div class="footer">Eleva Postventa · Grupo Kaufmann · 2026-03-17 · Datos en tiempo real desde Jira ELV</div>
+<div class="results-count" id="results-count"></div>
+<div class="grid" id="grid"></div>
 
 <script>
-const cards = document.querySelectorAll('.card');
+const TODAY = new Date('2026-03-18');
+
+const STATUS_COLOR = {
+  'Validacion':             '#10b981',
+  'Validación':             '#10b981',
+  'En curso':               '#3b82f6',
+  'Tareas por hacer':       '#f59e0b',
+  'Backlog':                '#8b5cf6',
+  'Listo para refinamiento':'#06b6d4',
+  'Refinamiento':           '#06b6d4',
+  'Bloqueado':              '#ef4444',
+};
+const STATUS_LABEL = {
+  'Validacion':             'Validación',
+  'Listo para refinamiento':'Refinamiento',
+  'Tareas por hacer':       'Por hacer',
+};
+function sLabel(s) { return STATUS_LABEL[s] || s; }
+function sColor(s) { return STATUS_COLOR[s] || '#94a3b8'; }
+
+const epics = [
+  {key:"ELV-3033", summary:"Perfil de cliente", status:"Validacion", startDate:"2026-01-01", duedate:"2026-03-20", assignee:"Fernando Chazarreta",
+   desc:"Centralizar toda la información relevante del cliente en Eleva: datos personales, vehículos, historial de OT, contactabilidad y recomendaciones IA."},
+  {key:"ELV-3456", summary:"Métricas de usabilidad Eleva", status:"Backlog", startDate:"2026-03-14", duedate:"2026-03-21", assignee:"Andrea",
+   desc:"Indicadores de uso de Eleva a nivel de asesor: frecuencia de ingreso, días activos, uso por sección (Venta Digital, Agenda, Mis Ventas, etc.)."},
+  {key:"ELV-3454", summary:"Información de Garantía General y Garantía Extendida", status:"Tareas por hacer", startDate:"2026-03-22", duedate:"2026-03-28", assignee:"Andrea",
+   desc:"Semáforo visual en Venta Digital que indica si el cliente tiene garantía vigente (verde) o no (rojo), para identificar oportunidades de venta de GE."},
+  {key:"ELV-2965", summary:"Pautas de Mantenimiento en Eleva Perú", status:"Listo para refinamiento", startDate:"2026-03-19", duedate:"2026-03-29", assignee:"Andrea",
+   desc:"Visualización de pautas de mantenimiento por vehículo según kilometraje y recomendaciones del fabricante, para facilitar oferta de servicios."},
+  {key:"ELV-2913", summary:"Refactor: Mis Ventas Eleva", status:"Backlog", startDate:"2026-03-24", duedate:"2026-04-06", assignee:"Mauricio Etchevest",
+   desc:"Rediseño de Mis Ventas con solapas digitales/manuales, campo Categoría, filtros por columna, exportación a Excel y 3 KPIs resumen superiores."},
+  {key:"ELV-3122", summary:"Home Eleva", status:"Tareas por hacer", startDate:"2026-03-13", duedate:"2026-04-15", assignee:"Victor Asencio",
+   desc:"Nuevo Home personalizado por perfil con dashboards, acciones prioritarias del día, KPIs de NPS, permanencia y meta de facturación."},
+  {key:"ELV-3491", summary:"Filtros Ofertas de Servicio Originales vs Alternativos", status:"Backlog", startDate:"2026-04-12", duedate:"2026-04-18", assignee:"Andrea",
+   desc:"Filtros en el módulo de ofertas de servicio para distinguir repuestos originales vs alternativos, facilitando propuestas más flexibles al cliente."},
+  {key:"ELV-2759", summary:"Eleva: Selling Speech 2.0", status:"Tareas por hacer", startDate:"2026-04-01", duedate:"2026-04-30", assignee:"Andrea",
+   desc:"Acceso a historial de OT abiertas e históricas de un vehículo desde Eleva para mejorar la argumentación comercial al cotizar."},
+  {key:"ELV-3321", summary:"KPI paso vehicular", status:"Backlog", startDate:"2026-05-18", duedate:"2026-05-31", assignee:"Andrea",
+   desc:"Indicador del porcentaje de cotizaciones realizadas vs. clientes que visitan la sucursal, para medir efectividad comercial."},
+  {key:"ELV-3124", summary:"Portal Smart — NPS, Metas, Permanencia por Sucursal", status:"Backlog", startDate:"2026-04-01", duedate:"2026-05-31", assignee:"Andrea",
+   desc:"Tablero consolidado para Gerentes de Postventa con KPIs de NPS, metas de facturación y permanencia, filtrable por sucursal, período y línea."},
+  {key:"ELV-3319", summary:"Semáforo de productos", status:"Listo para refinamiento", startDate:"2026-06-01", duedate:"2026-06-14", assignee:"Andrea",
+   desc:"Visualización de productos y servicios no contratados por vehículo en la cartera de clientes, para anticipar cotizaciones efectivas."},
+  {key:"ELV-3156", summary:"Incrementales Agenda", status:"Backlog", startDate:"2026-06-01", duedate:"2026-06-14", assignee:"Andrea",
+   desc:"Mejoras al módulo de Agenda: anulación de reservas, agendamiento para terceros y perfil de asesor call center."},
+  {key:"ELV-2912", summary:"Refactor: Mis Cotizaciones Eleva", status:"Backlog", startDate:"2026-06-12", duedate:"2026-06-25", assignee:"Mauricio Etchevest",
+   desc:"Rediseño de Mis Cotizaciones con todos los productos Eleva, filtros Reenviar/Re-cotizar, acciones por WhatsApp y exportación de cotización."},
+  {key:"ELV-3521", summary:"Whatsapp Eleva incluye asesor", status:"Backlog", startDate:null, duedate:null, assignee:"Andrea",
+   desc:"Integración de WhatsApp en el flujo de Eleva incluyendo al asesor como participante activo de la comunicación con el cliente."},
+  {key:"ELV-3072", summary:"Incrementales Asistencia en Ruta", status:"Tareas por hacer", startDate:null, duedate:null, assignee:"Andrea",
+   desc:"Ajuste del alcance de Asistencia en Ruta: excluir marca Smart, mantener para MB y Maxus (excepto camiones). Incorporar al flujo de pago MyService."},
+];
+
+// ─── KPIs ────────────────────────────────────────────────────────────────────
+const kpiData = [
+  {icon:'📊', val: epics.length,                                                      lbl:'Total épicas'},
+  {icon:'🔵', val: epics.filter(e=>e.status==='En curso').length,                      lbl:'En curso'},
+  {icon:'🟡', val: epics.filter(e=>e.status==='Tareas por hacer').length,              lbl:'Por hacer'},
+  {icon:'🟣', val: epics.filter(e=>e.status==='Backlog').length,                       lbl:'Backlog'},
+  {icon:'✅', val: epics.filter(e=>e.status==='Validacion'||e.status==='Validación').length, lbl:'Validación'},
+  {icon:'🔵', val: epics.filter(e=>e.status==='Listo para refinamiento').length,       lbl:'Refinamiento'},
+];
+document.getElementById('kpi-row').innerHTML = kpiData.map(k =>
+  `<div class="kpi"><div class="kpi-icon">${k.icon}</div><div><div class="kpi-val">${k.val}</div><div class="kpi-lbl">${k.lbl}</div></div></div>`
+).join('');
+
+// ─── Render ──────────────────────────────────────────────────────────────────
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d + 'T00:00:00').toLocaleDateString('es-CL', {day:'2-digit', month:'short', year:'numeric'});
+}
+
+function renderCards(items) {
+  const grid = document.getElementById('grid');
+  document.getElementById('results-count').textContent = items.length + ' épica' + (items.length !== 1 ? 's' : '');
+  if (!items.length) { grid.innerHTML = '<div class="empty-msg">Sin resultados para este filtro.</div>'; return; }
+  grid.innerHTML = items.map(e => {
+    const color = sColor(e.status);
+    const isOverdue = e.duedate && new Date(e.duedate) < TODAY;
+    const dueDateStr = e.duedate
+      ? `<span style="color:${isOverdue ? '#ef4444' : '#1e293b'};font-weight:700">${formatDate(e.duedate)}${isOverdue ? ' ⚠️' : ''}</span>`
+      : '<span style="color:#94a3b8">Sin fecha</span>';
+    return `
+    <div class="card" style="--status-color:${color}">
+      <div class="card-top">
+        <div class="card-key"><a href="https://grupokaufmann.atlassian.net/browse/${e.key}" target="_blank">${e.key}</a></div>
+        <span class="badge" style="background:${color}20;color:${color}">${sLabel(e.status)}</span>
+      </div>
+      <div class="card-title">${e.summary}</div>
+      ${e.desc ? `<div class="card-desc">${e.desc}</div>` : ''}
+      <div class="card-meta">
+        <div class="card-meta-row">📅 Entrega: ${dueDateStr}</div>
+        <div class="card-meta-row">👤 Responsable: <span>${e.assignee}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 let activeFilter = 'all';
-let searchVal = '';
+let searchTerm   = '';
 
 function applyFilters() {
-  let visible = 0;
-  cards.forEach(c => {
-    const status  = c.dataset.status;
-    const text    = c.innerText.toLowerCase();
-    const matchF  = activeFilter === 'all' || status === activeFilter;
-    const matchS  = !searchVal || text.includes(searchVal);
-    c.classList.toggle('hidden', !(matchF && matchS));
-    if (matchF && matchS) visible++;
-  });
-  const nr = document.querySelector('.no-results');
-  if (nr) nr.remove();
-  if (visible === 0) {
-    const div = document.createElement('div');
-    div.className = 'no-results';
-    div.textContent = 'Sin resultados para este filtro.';
-    document.getElementById('cards-grid').appendChild(div);
+  let items = epics;
+  if (activeFilter !== 'all') items = items.filter(e => e.status === activeFilter);
+  if (searchTerm) {
+    const t = searchTerm.toLowerCase();
+    items = items.filter(e => e.summary.toLowerCase().includes(t) || e.key.toLowerCase().includes(t) || e.assignee.toLowerCase().includes(t));
   }
+  renderCards(items);
 }
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -371,11 +237,15 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     applyFilters();
   });
 });
-
-document.getElementById('search').addEventListener('input', (e) => {
-  searchVal = e.target.value.toLowerCase().trim();
+document.getElementById('search').addEventListener('input', e => {
+  searchTerm = e.target.value;
   applyFilters();
 });
+
+applyFilters();
+
+document.getElementById('update-date').textContent =
+  TODAY.toLocaleDateString('es-CL', {day:'2-digit', month:'long', year:'numeric'});
 </script>
 </body>
 </html>
