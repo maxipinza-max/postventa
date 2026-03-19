@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roadmap Postventa — Eleva</title>
+  <title>Roadmap Postventa â Eleva</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -107,17 +107,17 @@
 
 <div class="header">
   <div>
-    <h1>📅 Roadmap Postventa</h1>
-    <p>Épicas Jira · Proyecto ELV · Label: Postventa</p>
+    <h1>ð Roadmap Postventa</h1>
+    <p>Ãpicas Jira Â· Proyecto ELV Â· Label: Postventa</p>
   </div>
   <div style="display:flex;align-items:center;gap:16px;">
     <div class="header-nav">
-      <a href="index.html">← Inicio</a>
-      <a href="dashboard.html">📋 Dashboard</a>
+      <a href="index.html">â Inicio</a>
+      <a href="dashboard.html">ð Dashboard</a>
     </div>
     <div class="header-meta">
       <strong id="update-date"></strong>
-      Última actualización
+      Ãltima actualizaciÃ³n
     </div>
   </div>
 </div>
@@ -125,7 +125,7 @@
 <div class="kpi-row" id="kpi-row"></div>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Validación</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>ValidaciÃ³n</div>
   <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>En curso</div>
   <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Tareas por hacer</div>
   <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Backlog</div>
@@ -142,7 +142,7 @@
 </div>
 
 <div class="no-date-section" id="no-date-section" style="display:none">
-  <div class="no-date-title">⚠️ Épicas sin fecha de entrega</div>
+  <div class="no-date-title">â ï¸ Ãpicas sin fecha de entrega</div>
   <table>
     <thead><tr><th>Key</th><th>Nombre</th><th>Estado</th><th>Responsable</th></tr></thead>
     <tbody id="no-date-table"></tbody>
@@ -152,14 +152,14 @@
 <div class="tooltip" id="tooltip"></div>
 
 <script>
-const TODAY = new Date('2026-03-18');
+const TODAY = new Date('2026-03-19');
 const TIMELINE_START = new Date('2026-01-01');
 const TIMELINE_END   = new Date('2026-07-31');
 const TOTAL_DAYS = (TIMELINE_END - TIMELINE_START) / 86400000;
 
 const STATUS_COLOR = {
   'Validacion':             '#10b981',
-  'Validación':             '#10b981',
+  'ValidaciÃ³n':             '#10b981',
   'En curso':               '#3b82f6',
   'Tareas por hacer':       '#f59e0b',
   'Backlog':                '#8b5cf6',
@@ -169,8 +169,8 @@ const STATUS_COLOR = {
 };
 
 const STATUS_LABEL = {
-  'Validacion':             'Validación',
-  'Validación':             'Validación',
+  'Validacion':             'ValidaciÃ³n',
+  'ValidaciÃ³n':             'ValidaciÃ³n',
   'Tareas por hacer':       'Por hacer',
   'Listo para refinamiento':'Refinamiento',
 };
@@ -180,23 +180,22 @@ function statusColor(s) { return STATUS_COLOR[s] || '#94a3b8'; }
 
 const epics = [
   {key:"ELV-3033", summary:"Perfil de cliente", status:"Validacion", startDate:"2026-01-01", duedate:"2026-03-20", assignee:"Fernando Chazarreta"},
-  {key:"ELV-3456", summary:"Métricas de usabilidad Eleva", status:"Backlog", startDate:"2026-03-14", duedate:"2026-03-21", assignee:"Andrea"},
-  {key:"ELV-3454", summary:"Información de Garantía General y GE", status:"Tareas por hacer", startDate:"2026-03-22", duedate:"2026-03-28", assignee:"Andrea"},
-  {key:"ELV-2965", summary:"Pautas de Mantenimiento Eleva Perú", status:"Listo para refinamiento", startDate:"2026-03-19", duedate:"2026-03-29", assignee:"Andrea"},
+  {key:"ELV-3456", summary:"MÃ©tricas de usabilidad Eleva", status:"Backlog", startDate:"2026-03-14", duedate:"2026-03-21", assignee:"Andrea"},
+  {key:"ELV-3454", summary:"InformaciÃ³n de GarantÃ­a General y GE", status:"Tareas por hacer", startDate:"2026-03-22", duedate:"2026-03-28", assignee:"Andrea"},
+  {key:"ELV-2965", summary:"Pautas de Mantenimiento Eleva PerÃº", status:"Listo para refinamiento", startDate:"2026-03-19", duedate:"2026-03-29", assignee:"Andrea"},
   {key:"ELV-2913", summary:"Refactor: Mis Ventas Eleva", status:"Backlog", startDate:"2026-03-24", duedate:"2026-04-06", assignee:"Mauricio Etchevest"},
   {key:"ELV-3122", summary:"Home Eleva", status:"Tareas por hacer", startDate:"2026-03-13", duedate:"2026-04-15", assignee:"Victor Asencio"},
   {key:"ELV-3491", summary:"Filtros Ofertas Originales vs Alternativos", status:"Backlog", startDate:"2026-04-12", duedate:"2026-04-18", assignee:"Andrea"},
   {key:"ELV-2759", summary:"Eleva: Selling Speech 2.0", status:"Tareas por hacer", startDate:"2026-04-01", duedate:"2026-04-30", assignee:"Andrea"},
   {key:"ELV-3321", summary:"KPI paso vehicular", status:"Backlog", startDate:"2026-05-18", duedate:"2026-05-31", assignee:"Andrea"},
-  {key:"ELV-3124", summary:"Portal Smart — NPS, Metas, Permanencia", status:"Backlog", startDate:"2026-04-01", duedate:"2026-05-31", assignee:"Andrea"},
-  {key:"ELV-3319", summary:"Semáforo de productos", status:"Listo para refinamiento", startDate:"2026-06-01", duedate:"2026-06-14", assignee:"Andrea"},
+  {key:"ELV-3124", summary:"Portal Smart â NPS, Metas, Permanencia", status:"Backlog", startDate:"2026-04-01", duedate:"2026-05-31", assignee:"Andrea"},
+  {key:"ELV-3319", summary:"SemÃ¡foro de productos", status:"Listo para refinamiento", startDate:"2026-06-01", duedate:"2026-06-14", assignee:"Andrea"},
   {key:"ELV-3156", summary:"Incrementales Agenda", status:"Backlog", startDate:"2026-06-01", duedate:"2026-06-14", assignee:"Andrea"},
   {key:"ELV-2912", summary:"Refactor: Mis Cotizaciones Eleva", status:"Backlog", startDate:"2026-06-12", duedate:"2026-06-25", assignee:"Mauricio Etchevest"},
   {key:"ELV-3521", summary:"Whatsapp Eleva incluye asesor", status:"Backlog", startDate:null, duedate:null, assignee:"Andrea"},
   {key:"ELV-3072", summary:"Incrementales Asistencia en Ruta", status:"Tareas por hacer", startDate:null, duedate:null, assignee:"Andrea"},
 ];
 
-// ─── KPIs ───────────────────────────────────────────────────────────────────
 const total    = epics.length;
 const conFecha = epics.filter(e => e.duedate).length;
 const sinFecha = epics.filter(e => !e.duedate).length;
@@ -206,21 +205,20 @@ const inNext30 = epics.filter(e => {
   return d >= TODAY && d <= new Date(TODAY.getTime() + 30*86400000);
 }).length;
 const bloqueados   = epics.filter(e => e.status === 'Bloqueado').length;
-const enValidacion = epics.filter(e => e.status === 'Validacion' || e.status === 'Validación').length;
+const enValidacion = epics.filter(e => e.status === 'Validacion' || e.status === 'ValidaciÃ³n').length;
 
 const kpis = [
-  {icon:'📊', val:total,      lbl:'Total épicas'},
-  {icon:'📅', val:conFecha,   lbl:'Con fecha'},
-  {icon:'⏰', val:inNext30,   lbl:'Próx. 30 días'},
-  {icon:'✅', val:enValidacion,lbl:'En validación'},
-  {icon:'🚫', val:bloqueados, lbl:'Bloqueados'},
-  {icon:'❓', val:sinFecha,   lbl:'Sin fecha'},
+  {icon:'ð', val:total,      lbl:'Total Ã©picas'},
+  {icon:'ð', val:conFecha,   lbl:'Con fecha'},
+  {icon:'â°', val:inNext30,   lbl:'PrÃ³x. 30 dÃ­as'},
+  {icon:'â', val:enValidacion,lbl:'En validaciÃ³n'},
+  {icon:'ð«', val:bloqueados, lbl:'Bloqueados'},
+  {icon:'â', val:sinFecha,   lbl:'Sin fecha'},
 ];
 document.getElementById('kpi-row').innerHTML = kpis.map(k =>
   `<div class="kpi"><div class="kpi-icon">${k.icon}</div><div><div class="kpi-val">${k.val}</div><div class="kpi-lbl">${k.lbl}</div></div></div>`
 ).join('');
 
-// ─── Month labels ────────────────────────────────────────────────────────────
 const months = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL'];
 const monthStarts = [
   new Date('2026-01-01'), new Date('2026-02-01'), new Date('2026-03-01'),
@@ -238,14 +236,12 @@ months.forEach((m, i) => {
   labelContainer.appendChild(span);
 });
 
-// ─── Today position ─────────────────────────────────────────────────────────
 function daysPct(date) {
   const d = typeof date === 'string' ? new Date(date) : date;
   return Math.max(0, Math.min(100, ((d - TIMELINE_START) / 86400000 / TOTAL_DAYS) * 100));
 }
 const todayPct = daysPct(TODAY);
 
-// ─── Gantt rows ──────────────────────────────────────────────────────────────
 const ganttBody = document.getElementById('gantt-body');
 const tooltip   = document.getElementById('tooltip');
 let tooltipTimer;
@@ -273,7 +269,6 @@ epics.filter(e => e.duedate).forEach(epic => {
     </div>`;
   ganttBody.appendChild(row);
 
-  // Add today line to each track
   const track = row.querySelector('.gantt-track');
   const todayDiv = document.createElement('div');
   todayDiv.className = 'today-line';
@@ -288,18 +283,17 @@ epics.filter(e => e.duedate).forEach(epic => {
   }
   track.appendChild(todayDiv);
 
-  // Tooltip
   const bar = row.querySelector('.gantt-bar');
   bar.addEventListener('mouseenter', (e) => {
     clearTimeout(tooltipTimer);
-    const dueStr  = epic.duedate  ? new Date(epic.duedate + 'T00:00:00').toLocaleDateString('es-CL') : '—';
-    const startStr = epic.startDate ? new Date(epic.startDate + 'T00:00:00').toLocaleDateString('es-CL') : '—';
+    const dueStr  = epic.duedate  ? new Date(epic.duedate + 'T00:00:00').toLocaleDateString('es-CL') : 'â';
+    const startStr = epic.startDate ? new Date(epic.startDate + 'T00:00:00').toLocaleDateString('es-CL') : 'â';
     tooltip.innerHTML = `<strong>${epic.summary}</strong>
-      <span>🔑 ${epic.key}</span><br>
-      <span>📅 Inicio: ${startStr}</span><br>
-      <span>🏁 Entrega: ${dueStr}</span><br>
-      <span>🏷 Estado: ${statusLabel(epic.status)}</span><br>
-      <span>👤 ${epic.assignee}</span>`;
+      <span>ð ${epic.key}</span><br>
+      <span>ð Inicio: ${startStr}</span><br>
+      <span>ð Entrega: ${dueStr}</span><br>
+      <span>ð· Estado: ${statusLabel(epic.status)}</span><br>
+      <span>ð¤ ${epic.assignee}</span>`;
     tooltip.classList.add('show');
     moveTooltip(e);
   });
@@ -316,7 +310,6 @@ function moveTooltip(e) {
   tooltip.style.top  = (y + 100 > window.innerHeight ? y - 120 : y) + 'px';
 }
 
-// ─── No-date table ──────────────────────────────────────────────────────────
 const noDates = epics.filter(e => !e.duedate);
 if (noDates.length) {
   document.getElementById('no-date-section').style.display = 'block';
@@ -329,7 +322,6 @@ if (noDates.length) {
     </tr>`).join('');
 }
 
-// ─── Update date ─────────────────────────────────────────────────────────────
 document.getElementById('update-date').textContent =
   TODAY.toLocaleDateString('es-CL', {day:'2-digit', month:'long', year:'numeric'});
 </script>
